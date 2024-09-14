@@ -114,6 +114,7 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
   console.log('Parsed latitude and longitude:', { lat, lon });
 
   if (isNaN(lat) || isNaN(lon) || !isFinite(lat) || !isFinite(lon)) {
+    console.log("INVALID LATITUDE/LONGITUDE");
     return res.status(400).json({ error: 'Invalid latitude or longitude' });
   }
 
