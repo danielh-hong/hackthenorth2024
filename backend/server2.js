@@ -7,7 +7,16 @@ require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { User, FishCatch } = require('./database');
+const { User } = require('./database'); // Make sure this path is correct
+// Create a new directory synchronously
+const newFolderPath = path.join(__dirname, 'uploads');
+
+try {
+  fs.mkdirSync(newFolderPath, { recursive: true });
+  console.log('Folder created successfully');
+} catch (err) {
+  console.error('Error creating folder:', err);
+}
 
 const app = express();
 
@@ -85,12 +94,14 @@ function fileToGenerativePart(filePath, mimeType) {
 
 app.post('/identify-fish', upload.single('image'), async (req, res) => {
   if (!req.file) {
+    console.log("ERROR 400: NO IMAGE FILE UPLOADED");
     return res.status(400).json({ error: 'No image file uploaded' });
   }
 
-  const { username, latitude, longitude } = req.body;
-  if (!username || !latitude || !longitude) {
-    return res.status(400).json({ error: 'Username and location are required' });
+  const { username } = req.body;
+  if (!username) {
+    console.log("ERROR 400: USERNAME IS REQUIRED");
+    return res.status(400).json({ error: 'Username is required' });
   }
 
   const filePath = path.resolve(req.file.path);
@@ -101,12 +112,10 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     const prompt = `
       Analyze this image of a fish and provide the following information:
       1. Fish Name: Identify the species of the fish.
-      2. Rarity Score: Rate the rarity of the fish on a scale from 1 to 10 in terms of fish native to Canada, where 1 is very common and 10 is extremely rare.
+      2. Rarity Score: Rate the rarity of the fish on a scale from 1 to 10, where 1 is very common and 10 is extremely rare.
       3. Description: Provide a brief description of the fish.
       4. Location: Suggest a typical location where this fish might be found.
       5. Fish Story: Create a short, interesting story about catching this fish.
-      6. Weight: Estimate the weight of the fish in grams.
-      7. Length: Estimate the length of the fish in centimeters.
     `;
 
     const jsonSchema = {
@@ -116,11 +125,9 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
         rarityScore: { type: "number" },
         description: { type: "string" },
         location: { type: "string" },
-        fishStory: { type: "string" },
-        weight: { type: "number" },
-        length: { type: "number" }
+        fishStory: { type: "string" }
       },
-      required: ["fishName", "rarityScore", "description", "location", "fishStory", "weight", "length"]
+      required: ["fishName", "rarityScore", "description", "location", "fishStory"]
     };
 
     const result = await model.generateContent({
@@ -142,39 +149,27 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     const fishInfo = JSON.parse(await response.text());
 
     try {
+      console.log("ENTERING TRY / CATCH BLOCK");
       const user = await User.findOne({ username });
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-
-      // Create a new FishCatch document
-      const newFishCatch = new FishCatch({
-        ...fishInfo,
-        caughtBy: user._id,
-        dateCaught: new Date(),
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude)
-      });
-
-      // Save the new fish catch
-      await newFishCatch.save();
-
-      // Initialize fishCatches array if it doesn't exist
-      if (!user.fishCatches) {
-        user.fishCatches = [];
+      // Check if this type of fish has been caught before
+      const existingFishCatchIndex = user.fishCatches.findIndex(fishCatch => fishCatch.fishName === fishInfo.fishName);
+      if (existingFishCatchIndex !== -1) {
+        user.fishCatches[existingFishCatchIndex].timesCaught += 1;
+      } else {
+        user.fishCatches.push({
+          ...fishInfo,
+          dateCaught: new Date(),
+          timesCaught: 1
+        });
       }
-      
 
-      // Add the reference to the user's fishCatches array
-      user.fishCatches.push(newFishCatch._id);
       await user.save();
 
-      res.json({
-        ...fishInfo,
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude)
-      });
+      res.json(fishInfo);
     } catch (dbError) {
       console.error('Database error:', dbError);
       res.status(500).json({ error: 'An error occurred while updating the database.' });
@@ -188,55 +183,6 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     });
   }
 });
-
-app.get('/get-all-fish-catches', async (req, res) => {
-  try {
-    // Fetch all fish catches from the database
-    const fishCatches = await FishCatch.find({}).populate('caughtBy', 'username');
-
-    // Transform the data to include the username and format the location
-    const formattedFishCatches = fishCatches.map(fishCatch => ({
-      ...fishCatch.toObject(),
-      username: fishCatch.caughtBy.username,
-      location: `${fishCatch.latitude},${fishCatch.longitude}`,
-      caughtBy: undefined // Remove the caughtBy field to avoid sending unnecessary data
-    }));
-
-    res.json(formattedFishCatches);
-  } catch (error) {
-    console.error('Error fetching fish catches:', error);
-    res.status(500).json({ error: 'An error occurred while fetching fish catches' });
-  }
-});
-
-app.get('/recent-fish-catches', async (req, res) => {
-  try {
-    const recentCatches = await FishCatch.find({})
-      .sort({ dateCaught: -1 }) // Sort by date, most recent first
-      .limit(10) // Limit to 10 most recent catches
-      .populate('caughtBy', 'username');
-
-    const formattedCatches = recentCatches.map(fishCatch => ({
-      _id: fishCatch._id,
-      fishName: fishCatch.fishName,
-      rarityScore: fishCatch.rarityScore,
-      dateCaught: fishCatch.dateCaught,
-      description: fishCatch.description,
-      latitude: fishCatch.latitude,
-      longitude: fishCatch.longitude,
-      fishStory: fishCatch.fishStory,
-      weight: fishCatch.weight,
-      length: fishCatch.length,
-      username: fishCatch.caughtBy.username
-    }));
-
-    res.json(formattedCatches);
-  } catch (error) {
-    console.error('Error fetching recent fish catches:', error);
-    res.status(500).json({ error: 'An error occurred while fetching recent fish catches' });
-  }
-});
-
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
