@@ -5,6 +5,7 @@ import Login from './auth/login'; // Placeholder for login page
 import Signup from './auth/signup'; // Placeholder for signup page
 import { ThemeProvider } from './ColorTheme';
 import './App.css';
+import FishStoryGenerator from './FishStoryGenerator';
 
 const AppContent = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const App = () => {
     <Router>
       <ThemeProvider>
         <AppContent />
+        <FishStoryGenerator />
       </ThemeProvider>
     </Router>
   );

@@ -1,10 +1,20 @@
-import express from "express";
-import cors from "cors";
+const express = require('express');
+const cors = require('cors');
+
+
 // import records from "./routes/record.js";
+require('dotenv').config();
 
-const cohere = require('cohere-ai');
-cohere.init(process.env.COHERE_API_KEY);
-
+const { CohereClient } = require('cohere-ai');
+console.log(process.env.COHERE_API_KEY);
+try {
+    const cohere = new CohereClient({
+        token: process.env.COHERE_API_KEY,
+      });
+    console.log("Cohere initialized successfully.");
+} catch (error) {
+    console.error("Error initializing Cohere:", error);
+}
 const PORT = process.env.PORT || 5050;
 const app = express();
 
