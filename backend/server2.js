@@ -99,7 +99,7 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     console.log("ERROR 400: NO IMAGE FILE UPLOADED");
     return res.status(400).json({ error: 'No image file uploaded' });
   }
-
+  console.log("REQUEST BODY:", req.body);
   const { username, latitude, longitude } = req.body;
   if (!username || latitude === undefined || longitude === undefined) {
     console.log("ERROR 400: USERNAME AND LOCATION REQD");
