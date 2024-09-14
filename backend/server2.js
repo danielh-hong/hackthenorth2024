@@ -226,8 +226,24 @@ app.get('/get-all-fish-catches', async (req, res) => {
 
 
 app.get('/recent-fish-catches', async (req, res) => {
+  const { query } = req.query;
+
+  const filter = {};
+  
+  if (query) {
+    const parsedRarity = parseFloat(query);
+    
+    // Check if query is a valid number for rarityScore
+    if (!isNaN(parsedRarity)) {
+      filter.rarityScore = parsedRarity;
+    } else {
+      // If query is not a valid number, search by fishName using regex
+      filter.fishName = { $regex: query, $options: 'i' };
+    }
+  }
+
   try {
-    const recentCatches = await FishCatch.find()
+    const recentCatches = await FishCatch.find(filter)
       .sort({ dateCaught: -1 }) // Sort by date, most recent first
       .limit(10) // Limit to 10 most recent catches
       .populate('caughtBy', 'username') // Populate the user who caught the fish
@@ -239,7 +255,6 @@ app.get('/recent-fish-catches', async (req, res) => {
     res.status(500).json({ message: 'Error fetching recent catches' });
   }
 });
-
 
 
 

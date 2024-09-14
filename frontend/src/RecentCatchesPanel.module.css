@@ -165,6 +165,47 @@
   border: 3px solid var(--bg);
 }
 
+
+
+/* Search Container */
+.searchContainer {
+  position: relative;
+  padding: 10px 20px;
+  background-color: var(--bg2);
+  box-sizing: border-box;
+}
+
+/* Search Icon */
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 30px;
+  transform: translateY(-50%);
+  color: var(--secondary);
+  pointer-events: none; /* Allows clicks to pass through to the input */
+}
+
+/* Search Input */
+.searchInput {
+  width: 100%;
+  padding: 12px 20px 12px 50px; /* Left padding to make space for the icon */
+  border: 2px solid var(--hover);
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--bg);
+  color: var(--text);
+  box-sizing: border-box;
+}
+
+.searchInput::placeholder {
+  color: var(--secondary);
+  opacity: 1; /* Override browser defaults */
+}
+
+
+
 /* Animations */
 @keyframes slideIn {
   from { transform: translateX(100%); }
