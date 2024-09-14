@@ -15,13 +15,6 @@ const fishData = [
 const Dashboard = () => {
   return (
     <div className={styles.dashboard}>
-      <div className={styles.waterBackground}></div>
-      <div className={styles.bubbles}>
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className={styles.bubble}></div>
-        ))}
-      </div>
-
       
       <div className={styles.content}>
         <div className={styles.statsContainer}>
