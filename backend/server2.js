@@ -225,6 +225,24 @@ app.get('/get-all-fish-catches', async (req, res) => {
 
 
 
+app.get('/recent-fish-catches', async (req, res) => {
+  try {
+    const recentCatches = await FishCatch.find()
+      .sort({ dateCaught: -1 }) // Sort by date, most recent first
+      .limit(10) // Limit to 10 most recent catches
+      .populate('caughtBy', 'username') // Populate the user who caught the fish
+      .select('-__v'); // Exclude the version key
+
+    res.json(recentCatches);
+  } catch (error) {
+    console.error('Error fetching recent catches:', error);
+    res.status(500).json({ message: 'Error fetching recent catches' });
+  }
+});
+
+
+
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
