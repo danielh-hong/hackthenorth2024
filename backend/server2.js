@@ -7,7 +7,16 @@ require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { User, FishCatch } = require('./database');
+const { User } = require('./database'); // Make sure this path is correct
+// Create a new directory synchronously
+const newFolderPath = path.join(__dirname, 'uploads');
+
+try {
+  fs.mkdirSync(newFolderPath, { recursive: true });
+  console.log('Folder created successfully');
+} catch (err) {
+  console.error('Error creating folder:', err);
+}
 
 const app = express();
 
@@ -87,13 +96,16 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
   console.log('Received request body:', req.body);
 
   if (!req.file) {
+    console.log("ERROR 400: NO IMAGE FILE UPLOADED");
     return res.status(400).json({ error: 'No image file uploaded' });
   }
-
+  console.log("REQUEST BODY:", req.body);
   const { username, latitude, longitude } = req.body;
   if (!username || latitude === undefined || longitude === undefined) {
+    console.log("ERROR 400: USERNAME AND LOCATION REQD");
     return res.status(400).json({ error: 'Username and location are required' });
   }
+
 
   // Validate latitude and longitude
   const lat = parseFloat(latitude);
@@ -102,6 +114,7 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
   console.log('Parsed latitude and longitude:', { lat, lon });
 
   if (isNaN(lat) || isNaN(lon) || !isFinite(lat) || !isFinite(lon)) {
+    console.log("INVALID LATITUDE/LONGITUDE");
     return res.status(400).json({ error: 'Invalid latitude or longitude' });
   }
 
@@ -113,12 +126,10 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     const prompt = `
       Analyze this image of a fish and provide the following information:
       1. Fish Name: Identify the species of the fish.
-      2. Rarity Score: Rate the rarity of the fish on a scale from 1 to 10 in terms of fish native to Canada, where 1 is very common and 10 is extremely rare.
+      2. Rarity Score: Rate the rarity of the fish on a scale from 1 to 10, where 1 is very common and 10 is extremely rare.
       3. Description: Provide a brief description of the fish.
       4. Location: Suggest a typical location where this fish might be found.
       5. Fish Story: Create a short, interesting story about catching this fish.
-      6. Weight: Estimate the weight of the fish in grams.
-      7. Length: Estimate the length of the fish in centimeters.
     `;
 
     const jsonSchema = {
@@ -128,11 +139,9 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
         rarityScore: { type: "number" },
         description: { type: "string" },
         location: { type: "string" },
-        fishStory: { type: "string" },
-        weight: { type: "number" },
-        length: { type: "number" }
+        fishStory: { type: "string" }
       },
-      required: ["fishName", "rarityScore", "description", "location", "fishStory", "weight", "length"]
+      required: ["fishName", "rarityScore", "description", "location", "fishStory"]
     };
 
     const result = await model.generateContent({
@@ -156,11 +165,23 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     console.log('AI generated fish info:', fishInfo);
 
     try {
+      console.log("ENTERING TRY / CATCH BLOCK");
       const user = await User.findOne({ username });
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
 
+      // Check if this type of fish has been caught before
+      const existingFishCatchIndex = user.fishCatches.findIndex(fishCatch => fishCatch.fishName === fishInfo.fishName);
+      if (existingFishCatchIndex !== -1) {
+        user.fishCatches[existingFishCatchIndex].timesCaught += 1;
+      } else {
+        user.fishCatches.push({
+          ...fishInfo,
+          dateCaught: new Date(),
+          timesCaught: 1
+        });
+      }
       // Create a new FishCatch document
       const newFishCatch = new FishCatch({
         ...fishInfo,
@@ -180,10 +201,12 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
         user.fishCatches = [];
       }
 
+
       // Add the reference to the user's fishCatches array
       user.fishCatches.push(newFishCatch._id);
       await user.save();
 
+      res.json(fishInfo);
       res.json({
         ...fishInfo,
         latitude: lat,

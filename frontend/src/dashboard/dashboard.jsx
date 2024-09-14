@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import FishIdentifier from './FishIdentifier';
 import { UserContext } from '../UserContext'; // Adjust the import path as needed
 import styles from './dashboard.module.css';
+import FishBackground from './FishBackground';
+import { Fish } from 'lucide-react';
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
@@ -20,6 +22,9 @@ const Dashboard = () => {
 
   return (
     <div className={styles.Dashboard}>
+      <div className={styles.fishBackground}>
+        <FishBackground />
+      </div>
       <FishIdentifier />
     </div>
   );
