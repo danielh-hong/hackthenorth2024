@@ -182,7 +182,7 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
           timesCaught: 1
         });
       }
-// so user.fishCatches is an objectId[], you're trying to add {fishInfo, dateCaught, timesCaught} to it.       }
+// so user.fishCatches is an objectId[], you're trying to add {fishInfo, dateCaught, timesCaught} to it.       } should store last time caught too. 
       // Create a new FishCatch document
       const newFishCatch = new FishCatch({
         ...fishInfo,
