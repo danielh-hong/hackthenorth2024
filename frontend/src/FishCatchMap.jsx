@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import axios from 'axios';
 import L from 'leaflet';
 import moment from 'moment-timezone';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from './ColorTheme';
 import { UserContext } from './UserContext';
+import RecentCatchesPanel from './RecentCatchesPanel';
 import styles from './FishCatchMap.module.css';
 
 const getColorByFishName = (fishName) => {
@@ -89,6 +89,13 @@ const FishCatchMap = () => {
     setSelectedCatch(fishCatch);
   };
 
+  const handleCatchSelect = (selectedCatch) => {
+    const [lat, lng] = [selectedCatch.latitude, selectedCatch.longitude];
+    setMapCenter([lat, lng]);
+    setMapZoom(15);
+    setSelectedCatch(selectedCatch);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -102,7 +109,7 @@ const FishCatchMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
         {fishCatches.map((fishCatch, index) => {
-          const [lat, lng] = fishCatch.location.split(',').map(Number);
+          const [lat, lng] = [fishCatch.latitude, fishCatch.longitude];
           const color = getColorByFishName(fishCatch.fishName);
           const icon = createFishIcon(color);
 
@@ -116,7 +123,6 @@ const FishCatchMap = () => {
                   <p><strong>Length:</strong> {fishCatch.length} cm</p>
                   <p><strong>Date Caught:</strong> {moment(fishCatch.dateCaught).format('YYYY-MM-DD HH:mm:ss')}</p>
                   <p><strong>Description:</strong> {fishCatch.description}</p>
-                  <p><strong>Times Caught:</strong> {fishCatch.timesCaught}</p>
                   <p><strong>Fish Story:</strong> {fishCatch.fishStory}</p>
                 </div>
               </Popup>
@@ -124,6 +130,7 @@ const FishCatchMap = () => {
           );
         })}
       </MapContainer>
+      <RecentCatchesPanel onCatchSelect={handleCatchSelect} />
     </div>
   );
 };

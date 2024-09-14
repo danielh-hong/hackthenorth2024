@@ -1,0 +1,102 @@
+.boardContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f0f8ff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #0077be;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.searchBar, .filterDate {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchIcon, .filterIcon {
+  color: #0077be;
+  margin-right: 0.5rem;
+}
+
+.searchInput, .dateInput {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+.catchesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.catchCard {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.catchCard:hover {
+  transform: translateY(-5px);
+}
+
+.fishName {
+  font-size: 1.5rem;
+  color: #0077be;
+  margin-bottom: 1rem;
+}
+
+.catchInfo {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.rarityBar {
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 1rem;
+  position: relative;
+}
+
+.rarityFill {
+  height: 100%;
+  background-color: #ffd700;
+  transition: width 0.3s ease;
+}
+
+.rarityScore {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #0077be;
+  margin-top: 2rem;
+}

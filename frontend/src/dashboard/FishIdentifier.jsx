@@ -15,6 +15,8 @@ const FishIdentifier = () => {
   const fileInputRef = useRef(null);
   const streamRef = useRef(null);
   const { user } = useContext(UserContext);
+  const [location, setLocation] = useState(null);
+
 
 
   useEffect(() => {
@@ -26,6 +28,30 @@ const FishIdentifier = () => {
       stopCamera();
     };
   }, [isModalOpen]);
+
+  useEffect(() => {
+    // Get user's location when component mounts
+    getUserLocation();
+  }, []);
+
+  const getUserLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          alert("Unable to get your location. Please make sure location services are enabled.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser");
+    }
+  };
 
   const startCamera = async () => {
     setIsLoading(true);
@@ -73,28 +99,31 @@ const FishIdentifier = () => {
   };
 
   const analyzeFish = async () => {
-    if (!image || !user) return;
+    if (!image || !user || !location) {
+      alert("Please make sure you're logged in, have an image, and location access is granted.");
+      return;
+    }
 
     setIsLoading(true);
     const formData = new FormData();
     formData.append('image', image, 'fish.jpg');
     formData.append('username', user.username);
+    formData.append('latitude', location.latitude);
+    formData.append('longitude', location.longitude);
 
     try {
       const response = await fetch('http://localhost:3001/identify-fish', {
         method: 'POST',
         body: formData,
       });
-
+  
       if (!response.ok) throw new Error('Failed to analyze fish');
-
+  
       const data = await response.json();
       setFishInfo({
         ...data,
         dateCaught: new Date().toLocaleString(),
         joke: generateFishJoke(data.fishName),
-        weight: data.weight, // Add this line
-        length: data.length  // Add this line
       });
     } catch (error) {
       console.error('Error analyzing fish:', error);
