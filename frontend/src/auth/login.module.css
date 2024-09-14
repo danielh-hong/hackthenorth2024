@@ -1,0 +1,197 @@
+.loginContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: var(--bg);
+  transition: background 0.3s ease;
+}
+
+.loginCard {
+  background: var(--bg2);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.loginCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.title {
+  font-size: 28px;
+  color: var(--text);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  position: relative;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 15px 15px 15px 50px;
+  border: none;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+
+}
+
+.inputGroup input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+  font-size: 20px;
+}
+
+.showPassword {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.loginButton, .googleButton {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+
+}
+
+.loginButton {
+  background: var(--primary);
+  color: var(--bg);
+}
+
+.loginButton:hover {
+  background: var(--secondary);
+}
+
+.googleButton {
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.googleButton:hover {
+  background: var(--hover);
+}
+
+.googleIcon {
+  font-size: 20px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--text);
+}
+
+.divider span {
+  padding: 0 10px;
+  color: var(--text);
+  font-size: 14px;
+  box-sizing: border-box;
+
+}
+
+.signupPrompt {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.signupPrompt span {
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.signupPrompt span:hover {
+  text-decoration: underline;
+}
+
+.error {
+  color: var(--error-color);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .loginCard {
+    padding: 30px;
+    border-radius: 15px;
+    box-sizing: border-box;
+
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .inputGroup input {
+    padding: 12px 12px 12px 40px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  .icon, .showPassword {
+    font-size: 18px;
+  }
+
+  .loginButton, .googleButton {
+    padding: 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+
+  }
+}

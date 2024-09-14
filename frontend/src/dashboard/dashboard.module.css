@@ -1,0 +1,145 @@
+.dashboard {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  position: relative;
+  padding-top: 40px;
+  box-sizing: border-box;
+}
+
+.waterBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, var(--bg), var(--bg2));
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.bubbles {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -100px;
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: rise 15s infinite ease-in;
+}
+
+@keyframes rise {
+  0% {
+    bottom: -100px;
+    transform: translateX(0);
+  }
+  50% {
+    transform: translate(100px);
+  }
+  100% {
+    bottom: 1080px;
+    transform: translateX(-200px);
+  }
+}
+
+
+.content {
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.statCard {
+  background-color: var(--bg2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4px 6px var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 8px var(--shadow);
+}
+
+.statIcon {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-right: 1rem;
+}
+
+.statInfo h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.statInfo p {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--highlight);
+}
+
+.chartContainer, .recentActivity {
+  background-color: var(--bg2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px var(--shadow);
+}
+
+.chartContainer h2, .recentActivity h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.recentActivity ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.recentActivity li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--hover);
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.recentActivity li:last-child {
+  border-bottom: none;
+}
+
+.recentActivity li:hover {
+  background-color: var(--hover);
+  border-radius: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+}
