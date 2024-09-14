@@ -2,91 +2,169 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  width: 300px;
-  max-height: 60px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  background-color: var(--bg2);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 1000;
 }
 
 .expanded {
-  max-height: calc(100vh - 100px);
+  height: calc(100vh - 40px);
+}
+
+.minimized {
+  height: 70px; /* Adjust this value to match your header height */
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  cursor: pointer;
-  background-color: #0077be;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
+  cursor: pointer;
+  box-sizing: border-box;
+  height: 70px; /* Ensure this matches the minimized height */
 }
 
 .header h2 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .content {
-  padding: 0 20px;
+  height: calc(100% - 70px);
   overflow-y: auto;
-  max-height: calc(100vh - 160px);
+  transition: max-height 0.3s ease-out;
 }
+
+.minimized .content {
+  max-height: 0;
+}
+
+/* Rest of the CSS remains the same */
 
 .catchList {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
 }
 
 .catchItem {
-  display: flex;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
+  padding: 20px;
+  border-bottom: 1px solid var(--hover);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .catchItem:hover {
-  background-color: #f0f0f0;
+  background-color: var(--hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px var(--shadow);
+}
+
+.catchHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .fishIcon {
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin-right: 15px;
 }
 
-.catchInfo h3 {
+.catchHeader h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  color: var(--text);
 }
 
-.catchInfo p {
-  margin: 5px 0 0;
-  font-size: 0.8rem;
-  color: #666;
+.catchInfo {
+  padding-left: 35px;
+  box-sizing: border-box;
+}
+
+.catchDate {
+  font-size: 0.9rem;
+  color: var(--secondary);
+  margin-bottom: 5px;
+}
+
+.rarityBar {
+  height: 6px;
+  background-color: var(--hover);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.rarityFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--highlight));
+  transition: width 0.3s ease;
+}
+
+.catchDetails {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.catchDetails span {
+  display: flex;
+  align-items: center;
+}
+
+.catchDetails svg {
+  margin-right: 5px;
+}
+
+.loader {
+  border: 4px solid var(--hover);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Smooth scrollbar */
+.content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+  border-radius: 20px;
+  border: 3px solid var(--bg);
 }
 
 /* Animations */
-@keyframes slideDown {
-  from { max-height: 60px; }
-  to { max-height: calc(100vh - 100px); }
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
-@keyframes slideUp {
-  from { max-height: calc(100vh - 100px); }
-  to { max-height: 60px; }
-}
-
-.panel.expanded {
-  animation: slideDown 0.3s ease-in-out;
-}
-
-.panel:not(.expanded) {
-  animation: slideUp 0.3s ease-in-out;
+.panel {
+  animation: slideIn 0.3s ease-out;
 }

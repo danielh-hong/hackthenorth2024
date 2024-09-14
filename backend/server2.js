@@ -84,13 +84,25 @@ function fileToGenerativePart(filePath, mimeType) {
 }
 
 app.post('/identify-fish', upload.single('image'), async (req, res) => {
+  console.log('Received request body:', req.body);
+
   if (!req.file) {
     return res.status(400).json({ error: 'No image file uploaded' });
   }
 
   const { username, latitude, longitude } = req.body;
-  if (!username || !latitude || !longitude) {
+  if (!username || latitude === undefined || longitude === undefined) {
     return res.status(400).json({ error: 'Username and location are required' });
+  }
+
+  // Validate latitude and longitude
+  const lat = parseFloat(latitude);
+  const lon = parseFloat(longitude);
+  
+  console.log('Parsed latitude and longitude:', { lat, lon });
+
+  if (isNaN(lat) || isNaN(lon) || !isFinite(lat) || !isFinite(lon)) {
+    return res.status(400).json({ error: 'Invalid latitude or longitude' });
   }
 
   const filePath = path.resolve(req.file.path);
@@ -141,21 +153,24 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     const response = await result.response;
     const fishInfo = JSON.parse(await response.text());
 
+    console.log('AI generated fish info:', fishInfo);
+
     try {
       const user = await User.findOne({ username });
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
       }
 
-
       // Create a new FishCatch document
       const newFishCatch = new FishCatch({
         ...fishInfo,
         caughtBy: user._id,
         dateCaught: new Date(),
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude)
+        latitude: lat,
+        longitude: lon
       });
+
+      console.log('New fish catch object:', newFishCatch);
 
       // Save the new fish catch
       await newFishCatch.save();
@@ -164,7 +179,6 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
       if (!user.fishCatches) {
         user.fishCatches = [];
       }
-      
 
       // Add the reference to the user's fishCatches array
       user.fishCatches.push(newFishCatch._id);
@@ -172,12 +186,12 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
 
       res.json({
         ...fishInfo,
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude)
+        latitude: lat,
+        longitude: lon
       });
     } catch (dbError) {
       console.error('Database error:', dbError);
-      res.status(500).json({ error: 'An error occurred while updating the database.' });
+      res.status(500).json({ error: 'An error occurred while updating the database.', details: dbError.message });
     }
   } catch (error) {
     console.error('Error processing image:', error);
@@ -209,33 +223,6 @@ app.get('/get-all-fish-catches', async (req, res) => {
   }
 });
 
-app.get('/recent-fish-catches', async (req, res) => {
-  try {
-    const recentCatches = await FishCatch.find({})
-      .sort({ dateCaught: -1 }) // Sort by date, most recent first
-      .limit(10) // Limit to 10 most recent catches
-      .populate('caughtBy', 'username');
-
-    const formattedCatches = recentCatches.map(fishCatch => ({
-      _id: fishCatch._id,
-      fishName: fishCatch.fishName,
-      rarityScore: fishCatch.rarityScore,
-      dateCaught: fishCatch.dateCaught,
-      description: fishCatch.description,
-      latitude: fishCatch.latitude,
-      longitude: fishCatch.longitude,
-      fishStory: fishCatch.fishStory,
-      weight: fishCatch.weight,
-      length: fishCatch.length,
-      username: fishCatch.caughtBy.username
-    }));
-
-    res.json(formattedCatches);
-  } catch (error) {
-    console.error('Error fetching recent fish catches:', error);
-    res.status(500).json({ error: 'An error occurred while fetching recent fish catches' });
-  }
-});
 
 
 const PORT = process.env.PORT || 3001;
