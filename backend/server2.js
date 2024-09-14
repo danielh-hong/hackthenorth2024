@@ -100,11 +100,12 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     return res.status(400).json({ error: 'No image file uploaded' });
   }
 
-  const { username } = req.body;
-  if (!username) {
-    console.log("ERROR 400: USERNAME IS REQUIRED");
-    return res.status(400).json({ error: 'Username is required' });
+  const { username, latitude, longitude } = req.body;
+  if (!username || latitude === undefined || longitude === undefined) {
+    console.log("ERROR 400: USERNAME AND LOCATION REQD");
+    return res.status(400).json({ error: 'Username and location are required' });
   }
+
 
   // Validate latitude and longitude
   const lat = parseFloat(latitude);
