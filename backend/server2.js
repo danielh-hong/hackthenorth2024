@@ -182,6 +182,7 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
           timesCaught: 1
         });
       }
+// so user.fishCatches is an objectId[], you're trying to add {fishInfo, dateCaught, timesCaught} to it.       }
       // Create a new FishCatch document
       const newFishCatch = new FishCatch({
         ...fishInfo,
