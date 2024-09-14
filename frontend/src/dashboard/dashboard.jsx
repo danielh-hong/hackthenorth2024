@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FishIdentifier from './FishIdentifier';
 import { UserContext } from '../UserContext'; // Adjust the import path as needed
-import styles from './Dashboard.module.css';
+import styles from './dashboard.module.css';
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);

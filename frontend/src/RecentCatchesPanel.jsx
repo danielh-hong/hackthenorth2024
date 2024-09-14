@@ -36,12 +36,12 @@ const RecentCatchesPanel = ({ onCatchSelect }) => {
     setIsExpanded(!isExpanded);
   };
 
-  return (
-    <div className={`${styles.panel} ${isExpanded ? styles.expanded : styles.minimized}`}>
-      <div className={styles.header} onClick={togglePanel}>
-        <h2>Recent Catches</h2>
-        {isExpanded ? <ChevronUp /> : <ChevronDown />}
-      </div>
+return (
+  <div className={`${styles.panel} ${isExpanded ? styles.expanded : styles.minimized}`}>
+    <div className={styles.header} onClick={togglePanel}>
+      <h2>Recent Catches</h2>
+      {isExpanded ? <ChevronUp /> : <ChevronDown />}
+    </div>
 
     {/* Search bar with icon */}
     <div className={styles.searchContainer}>

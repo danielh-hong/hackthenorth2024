@@ -244,8 +244,8 @@
   background-color: var(--card-bg);
   border-radius: 1rem;
   padding: 2rem;
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 30%;
+  max-height: 80%;
   overflow-y: auto;
   box-shadow: 0 15px 30px var(--shadow);
   position: relative;
