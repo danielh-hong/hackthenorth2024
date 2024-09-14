@@ -93,6 +93,8 @@ function fileToGenerativePart(filePath, mimeType) {
 }
 
 app.post('/identify-fish', upload.single('image'), async (req, res) => {
+  console.log('Received request body:', req.body);
+
   if (!req.file) {
     console.log("ERROR 400: NO IMAGE FILE UPLOADED");
     return res.status(400).json({ error: 'No image file uploaded' });
@@ -102,6 +104,26 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
   if (!username) {
     console.log("ERROR 400: USERNAME IS REQUIRED");
     return res.status(400).json({ error: 'Username is required' });
+  }
+
+  // Validate latitude and longitude
+  const lat = parseFloat(latitude);
+  const lon = parseFloat(longitude);
+  
+  console.log('Parsed latitude and longitude:', { lat, lon });
+
+  if (isNaN(lat) || isNaN(lon) || !isFinite(lat) || !isFinite(lon)) {
+    return res.status(400).json({ error: 'Invalid latitude or longitude' });
+  }
+
+  // Validate latitude and longitude
+  const lat = parseFloat(latitude);
+  const lon = parseFloat(longitude);
+  
+  console.log('Parsed latitude and longitude:', { lat, lon });
+
+  if (isNaN(lat) || isNaN(lon) || !isFinite(lat) || !isFinite(lon)) {
+    return res.status(400).json({ error: 'Invalid latitude or longitude' });
   }
 
   const filePath = path.resolve(req.file.path);
@@ -148,6 +170,8 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     const response = await result.response;
     const fishInfo = JSON.parse(await response.text());
 
+    console.log('AI generated fish info:', fishInfo);
+
     try {
       console.log("ENTERING TRY / CATCH BLOCK");
       const user = await User.findOne({ username });
@@ -165,14 +189,40 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
           dateCaught: new Date(),
           timesCaught: 1
         });
+
+      // Create a new FishCatch document
+      const newFishCatch = new FishCatch({
+        ...fishInfo,
+        caughtBy: user._id,
+        dateCaught: new Date(),
+        latitude: lat,
+        longitude: lon
+      });
+
+      console.log('New fish catch object:', newFishCatch);
+
+      // Save the new fish catch
+      await newFishCatch.save();
+
+      // Initialize fishCatches array if it doesn't exist
+      if (!user.fishCatches) {
+        user.fishCatches = [];
       }
 
+
+      // Add the reference to the user's fishCatches array
+      user.fishCatches.push(newFishCatch._id);
       await user.save();
 
       res.json(fishInfo);
+      res.json({
+        ...fishInfo,
+        latitude: lat,
+        longitude: lon
+      });
     } catch (dbError) {
       console.error('Database error:', dbError);
-      res.status(500).json({ error: 'An error occurred while updating the database.' });
+      res.status(500).json({ error: 'An error occurred while updating the database.', details: dbError.message });
     }
   } catch (error) {
     console.error('Error processing image:', error);
@@ -183,6 +233,28 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
     });
   }
 });
+
+app.get('/get-all-fish-catches', async (req, res) => {
+  try {
+    // Fetch all fish catches from the database
+    const fishCatches = await FishCatch.find({}).populate('caughtBy', 'username');
+
+    // Transform the data to include the username and format the location
+    const formattedFishCatches = fishCatches.map(fishCatch => ({
+      ...fishCatch.toObject(),
+      username: fishCatch.caughtBy.username,
+      location: `${fishCatch.latitude},${fishCatch.longitude}`,
+      caughtBy: undefined // Remove the caughtBy field to avoid sending unnecessary data
+    }));
+
+    res.json(formattedFishCatches);
+  } catch (error) {
+    console.error('Error fetching fish catches:', error);
+    res.status(500).json({ error: 'An error occurred while fetching fish catches' });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

@@ -1,53 +1,55 @@
+/* app.css */
+
 .App {
   text-align: center;
-  background: var(--background);
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background: var(--bg);
+  min-height: 100vh;
+  width: 100%;
   font-family: 'Poppins', sans-serif;
   color: var(--text);
 }
 
-
 :root {
-  --bg: #f8f9fa;
-  --bg2: #ffffff;
-  --text: #333333;
-  --primary: #3467eb;
-  --secondary: #2b4aa1;
-  --highlight: #ff7043;
-  --hover: #e9ecef;
-  --shadow: rgba(0, 0, 0, 0.1);
+  --bg: #F9FAFB; /* Background color */
+  --bg2: #FFFFFF; /* Secondary background */
+  --text: #1F2937; /* Text color */
+  --primary: #3B82F6; /* Primary color */
+  --secondary: #10B981; /* Secondary color */
+  --accent: #F59E0B; /* Accent color */
+  --highlight: #EF4444; /* Highlight color */
+  --card-bg: #FFFFFF; /* Card background */
+  --hover: #E5E7EB; /* Hover color */
+  --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
+  --modal-bg: rgba(0, 0, 0, 0.8); /* Modal background */
 }
 
 [data-theme='dark'] {
-  --bg: #1a1a1a;
-  --bg2: #2c2c2c;
-  --text: #f0f0f0;
-  --primary: #4a90e2;
-  --secondary: #345ea0;
-  --highlight: #ff7043;
-  --hover: #3a3a3a;
+  --bg: #1F2937;
+  --bg2: #111827;
+  --text: #F9FAFB;
+  --primary: #60A5FA;
+  --secondary: #34D399;
+  --accent: #FBBF24;
+  --highlight: #F87171;
+  --card-bg: #1F2937;
+  --hover: #374151;
   --shadow: rgba(255, 255, 255, 0.1);
+  --modal-bg: rgba(0, 0, 0, 0.8);
 }
 
-
-/* Scrollbar styling for ALL scrollbars */
+/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 4px; 
+  width: 4px;
   height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #00000082; /* for Chrome, Safari, and Opera */
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #888; /* for Chrome, Safari, and Opera */
-  border-radius: 10px; /* for Chrome, Safari, and Opera */
+  background-color: #888;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

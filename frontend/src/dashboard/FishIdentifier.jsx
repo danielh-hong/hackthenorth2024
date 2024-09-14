@@ -1,41 +1,34 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { MdCamera, MdFileUpload, MdAutorenew, MdAnalytics, MdAddAPhoto } from 'react-icons/md';
-import { FaFish, FaWater } from 'react-icons/fa';
+import { MdCamera, MdFileUpload, MdAutorenew, MdAnalytics, MdAddAPhoto, MdClose } from 'react-icons/md';
+import { FaFish } from 'react-icons/fa';
 
-import { UserContext } from '../UserContext'; // Adjust the import path as needed
+import { UserContext } from '../UserContext';
 import styles from './FishIdentifier.module.css';
 
 const FishIdentifier = () => {
   const [image, setImage] = useState(null);
   const [fishInfo, setFishInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
+  const [location, setLocation] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const streamRef = useRef(null);
   const { user } = useContext(UserContext);
-  const [location, setLocation] = useState(null);
-
-
 
   useEffect(() => {
-    if (isModalOpen) {
+    if (isCameraModalOpen) {
       startCamera();
     }
-
     return () => {
       stopCamera();
     };
-  }, [isModalOpen]);
+  }, [isCameraModalOpen]);
 
   useEffect(() => {
-    // Get user's location when component mounts
-    getUserLocation();
-  }, []);
-
-  const getUserLocation = () => {
-    if ("geolocation" in navigator) {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setLocation({
@@ -45,13 +38,13 @@ const FishIdentifier = () => {
         },
         (error) => {
           console.error("Error getting location:", error);
-          alert("Unable to get your location. Please make sure location services are enabled.");
+          alert("Unable to get your location. Please enable location services.");
         }
       );
     } else {
-      alert("Geolocation is not supported by your browser");
+      alert("Geolocation is not supported by your browser.");
     }
-  };
+  }, []);
 
   const startCamera = async () => {
     setIsLoading(true);
@@ -86,7 +79,7 @@ const FishIdentifier = () => {
       context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
       canvasRef.current.toBlob((blob) => {
         setImage(blob);
-        setIsModalOpen(false);
+        setIsCameraModalOpen(false);
       }, 'image/jpeg');
     }
   };
@@ -100,7 +93,7 @@ const FishIdentifier = () => {
 
   const analyzeFish = async () => {
     if (!image || !user || !location) {
-      alert("Please make sure you're logged in, have an image, and location access is granted.");
+      alert('Missing image, user, or location data. Please try again.');
       return;
     }
 
@@ -108,26 +101,30 @@ const FishIdentifier = () => {
     const formData = new FormData();
     formData.append('image', image, 'fish.jpg');
     formData.append('username', user.username);
-    formData.append('latitude', location.latitude);
-    formData.append('longitude', location.longitude);
+    formData.append('latitude', location.latitude.toFixed(6));
+    formData.append('longitude', location.longitude.toFixed(6));
 
     try {
       const response = await fetch('http://localhost:3001/identify-fish', {
         method: 'POST',
         body: formData,
       });
-  
-      if (!response.ok) throw new Error('Failed to analyze fish');
-  
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to analyze fish');
+      }
+
       const data = await response.json();
       setFishInfo({
         ...data,
         dateCaught: new Date().toLocaleString(),
-        joke: generateFishJoke(data.fishName),
+        joke: generateFishJoke(data.fishName)
       });
+      setIsResultsModalOpen(true);
     } catch (error) {
       console.error('Error analyzing fish:', error);
-      alert('Failed to analyze fish. Please try again.');
+      alert(error.message || 'Failed to analyze fish. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -136,6 +133,7 @@ const FishIdentifier = () => {
   const resetCapture = () => {
     setImage(null);
     setFishInfo(null);
+    setIsResultsModalOpen(false);
   };
 
   const generateFishJoke = (fishName) => {
@@ -174,15 +172,10 @@ const FishIdentifier = () => {
               <p>Your aquatic discovery awaits!</p>
             </div>
           )}
-          <div className={styles.waterOverlay}>
-            <FaWater className={styles.waterIcon} />
-            <FaWater className={styles.waterIcon} />
-            <FaWater className={styles.waterIcon} />
-          </div>
         </div>
 
         <div className={styles.actionButtons}>
-          <button onClick={() => setIsModalOpen(true)} className={`${styles.actionButton} ${styles.cameraButton}`}>
+          <button onClick={() => setIsCameraModalOpen(true)} className={`${styles.actionButton} ${styles.cameraButton}`}>
             <MdCamera /> Capture Fish
           </button>
           <button onClick={() => fileInputRef.current.click()} className={`${styles.actionButton} ${styles.uploadButton}`}>
@@ -195,7 +188,7 @@ const FishIdentifier = () => {
             accept="image/*"
             style={{ display: 'none' }}
           />
-          {image && (
+          {image && location && (
             <>
               <button onClick={analyzeFish} className={`${styles.actionButton} ${styles.analyzeButton}`} disabled={isLoading}>
                 <MdAnalytics /> {isLoading ? 'Analyzing...' : 'Identify Fish'}
@@ -208,7 +201,7 @@ const FishIdentifier = () => {
         </div>
       </div>
 
-      {isModalOpen && (
+      {isCameraModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <div className={styles.cameraPreview}>
@@ -219,36 +212,58 @@ const FishIdentifier = () => {
             </div>
             <div className={styles.modalActions}>
               <button onClick={captureImage} className={styles.captureButton}>Capture Fish</button>
-              <button onClick={() => setIsModalOpen(false)} className={styles.closeButton}>Close</button>
+              <button onClick={() => setIsCameraModalOpen(false)} className={styles.closeButton}>Close</button>
             </div>
           </div>
         </div>
       )}
       <canvas ref={canvasRef} style={{ display: 'none' }} width="640" height="480" />
 
-      {fishInfo && (
-        <div className={styles.fishInfoCard}>
-          <h2>You've discovered a {fishInfo.fishName}!</h2>
-          <div className={styles.fishImageContainer}>
-            <img src={URL.createObjectURL(image)} alt={fishInfo.fishName} className={styles.fishImage} />
-          </div>
-          <p className={styles.fishJoke}>{fishInfo.joke}</p>
-          <div className={styles.infoRow}>
-            <span>Rarity:</span>
+      {isResultsModalOpen && fishInfo && (
+        <div className={styles.fishResultsModal}>
+          <div className={styles.fishResultsContent}>
+            <h2 className={styles.fishResultsTitle}>You've discovered a {fishInfo.fishName}!</h2>
+            <div className={styles.fishImageContainer}>
+              <img src={URL.createObjectURL(image)} alt={fishInfo.fishName} className={styles.fishImage} />
+            </div>
+            <p className={styles.fishJoke}>{fishInfo.joke}</p>
+            <div className={styles.statRow}>
+              <span className={styles.statLabel}>Rarity:</span>
+              <span className={styles.statValue}>{fishInfo.rarityScore}/10</span>
+            </div>
             <div className={styles.progressBar}>
               <div className={styles.progress} style={{width: `${fishInfo.rarityScore * 10}%`}}></div>
             </div>
-            <span>{fishInfo.rarityScore}/10</span>
+            <div className={styles.statRow}>
+              <span className={styles.statLabel}>Weight:</span>
+              <span className={styles.statValue}>{fishInfo.weight} grams</span>
+            </div>
+            <div className={styles.statRow}>
+              <span className={styles.statLabel}>Length:</span>
+              <span className={styles.statValue}>{fishInfo.length} cm</span>
+            </div>
+            <div className={styles.statRow}>
+              <span className={styles.statLabel}>Date Caught:</span>
+              <span className={styles.statValue}>{fishInfo.dateCaught}</span>
+            </div>
+            <div className={styles.statRow}>
+              <span className={styles.statLabel}>Location:</span>
+              <span className={styles.statValue}>{fishInfo.location}</span>
+            </div>
+            <div className={styles.fishDescription}>
+              <h3>Description</h3>
+              <p>{fishInfo.description}</p>
+            </div>
+            <div className={styles.fishStory}>
+              <h3>Fish Story</h3>
+              <p>{fishInfo.fishStory}</p>
+            </div>
+            <button onClick={() => setIsResultsModalOpen(false)} className={styles.closeButton}>
+              <MdClose />
+            </button>
           </div>
-          <p><strong>Weight:</strong> {fishInfo.weight} grams</p>
-          <p><strong>Length:</strong> {fishInfo.length} cm</p>
-          <p><strong>Date Caught:</strong> {fishInfo.dateCaught}</p>
-          <p><strong>Description:</strong> {fishInfo.description}</p>
-          <p><strong>Location:</strong> {fishInfo.location}</p>
-          <p><strong>Fish Story:</strong> {fishInfo.fishStory}</p>
         </div>
       )}
-
     </div>
   );
 };

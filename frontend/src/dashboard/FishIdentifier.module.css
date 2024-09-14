@@ -1,70 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-:root {
-  --primary-color: #0077be;
-  --secondary-color: #00a86b;
-  --accent-color: #ffd700;
-  --background-color: #e6f3ff;
-  --text-color: #333;
-  --card-background: #ffffff;
-}
-
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-}
+/* FishIdentifier.module.css */
 
 .container {
-  max-width: 800px;
+  width: 100vw;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 2rem;
-  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-sizing: border-box;
+
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
 .headerIcon {
   font-size: 3rem;
-  color: var(--primary-color);
+  color: var(--primary);
   margin-right: 1rem;
 }
 
 .title {
   font-size: 3rem;
   font-weight: 700;
-  color: var(--primary-color);
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--primary);
 }
 
 .description {
   text-align: center;
   margin-bottom: 2rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.6;
-  color: var(--text-color);
+  color: var(--text);
 }
 
 .captureContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .imagePreviewArea {
   width: 100%;
   max-width: 500px;
   aspect-ratio: 4 / 3;
-  background-color: var(--primary-color);
-  border-radius: 12px;
+  background-color: var(--card-bg);
+  border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  position: relative;
+  box-shadow: 0 4px 6px var(--shadow);
+  transition: transform 0.3s ease;
+}
+
+.imagePreviewArea:hover {
+  transform: scale(1.02);
 }
 
 .placeholderContent {
@@ -73,14 +67,13 @@ body {
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: white;
-  z-index: 2;
-  position: relative;
+  color: var(--text);
 }
 
 .placeholderIcon {
-  font-size: 5rem;
+  font-size: 4rem;
   margin-bottom: 1rem;
+  color: var(--primary);
 }
 
 .capturedImage {
@@ -89,32 +82,9 @@ body {
   object-fit: cover;
 }
 
-.waterOverlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 30%;
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
-  overflow: hidden;
-}
-
-.waterIcon {
-  font-size: 3rem;
-  color: rgba(255, 255, 255, 0.3);
-  animation: wave 3s ease-in-out infinite;
-}
-
-@keyframes wave {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
 .actionButtons {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -123,101 +93,43 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.9rem 1.8rem;
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--card-bg);
   border: none;
-  border-radius: 8px;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   text-transform: uppercase;
 }
 
-.cameraButton { background-color: var(--primary-color); }
-.uploadButton { background-color: var(--secondary-color); }
-.analyzeButton { background-color: var(--accent-color); color: var(--text-color); }
-.resetButton { background-color: #e74c3c; }
-
 .actionButton:hover {
+  background-color: var(--hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cameraButton {
+  background-color: var(--primary);
+}
+
+.uploadButton {
+  background-color: var(--secondary);
+}
+
+.analyzeButton {
+  background-color: var(--accent);
+  color: var(--card-bg);
+}
+
+.resetButton {
+  background-color: var(--highlight);
 }
 
 .actionButton:disabled {
-  background-color: #bdc3c7;
+  background-color: var(--hover);
   cursor: not-allowed;
-}
-
-.fishInfoCard {
-  background-color: var(--card-background);
-  border-radius: 12px;
-  padding: 2rem;
-  margin-top: 2rem;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.fishInfoCard h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  color: var(--primary-color);
-  text-align: center;
-}
-
-.fishImageContainer {
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto 1rem;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.fishImage {
-  width: 100%;
-  height: auto;
-}
-
-.infoRow {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  background-color: #f0f0f0;
-  padding: 0.5rem;
-  border-radius: 8px;
-}
-
-.infoRow span {
-  flex: 1;
-  font-weight: 600;
-}
-
-.progressBar {
-  flex: 2;
-  height: 8px;
-  background-color: #ecf0f1;
-  border-radius: 4px;
-  overflow: hidden;
-  margin: 0 1rem;
-}
-
-.progress {
-  height: 100%;
-  background-color: var(--accent-color);
-  transition: width 0.5s ease-out;
-}
-
-.fishInfoCard p {
-  margin-bottom: 0.75rem;
-  line-height: 1.6;
-}
-
-.fishJoke {
-  font-style: italic;
-  margin-bottom: 1rem;
-  color: var(--secondary-color);
-  text-align: center;
-  font-size: 1.1rem;
+  transform: none;
 }
 
 .modal {
@@ -226,7 +138,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: var(--modal-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -234,14 +146,17 @@ body {
 }
 
 .modalContent {
-  background-color: var(--card-background);
+  background-color: var(--card-bg);
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: 1rem;
   max-width: 90%;
   max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 15px 30px var(--shadow);
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 .cameraPreview {
@@ -249,9 +164,10 @@ body {
   max-width: 640px;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
   position: relative;
+  box-shadow: 0 8px 16px var(--shadow);
 }
 
 .videoPreview {
@@ -265,51 +181,198 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 5rem;
+  font-size: 6rem;
   color: rgba(255, 255, 255, 0.5);
 }
 
 .modalActions {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
 }
 
-.captureButton, .closeButton {
-  padding: 0.75rem 1.5rem;
+.captureButton,
+.closeButton {
+  padding: 0.9rem 1.8rem;
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--card-bg);
   border: none;
-  border-radius: 8px;
+  border-radius: 0.75rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   text-transform: uppercase;
 }
 
 .captureButton {
-  background-color: var(--accent-color);
-  color: var(--text-color);
+  background-color: var(--accent);
+  color: var(--card-bg);
 }
 
 .closeButton {
-  background-color: #e74c3c;
+  background-color: var(--highlight);
 }
 
-.captureButton:hover, .closeButton:hover {
+.captureButton:hover,
+.closeButton:hover {
+  background-color: var(--hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .loginPrompt {
   text-align: center;
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-top: 3rem;
+  font-weight: 600;
+}
+
+.fishResultsModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.fishResultsContent {
+  background-color: var(--card-bg);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 15px 30px var(--shadow);
+  position: relative;
+}
+
+.fishResultsTitle {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+  text-align: center;
+}
+
+.fishImageContainer {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 2rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 8px 16px var(--shadow);
+}
+
+.fishImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.fishJoke {
+  font-style: italic;
+  margin-bottom: 2rem;
+  color: var(--secondary);
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 1rem;
+  background-color: var(--bg2);
+  border-radius: 0.5rem;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--hover);
+}
+
+.statLabel {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.statValue {
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.progressBar {
+  width: 100%;
+  height: 0.5rem;
+  background-color: var(--bg2);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.progress {
+  height: 100%;
+  background-color: var(--accent);
+  transition: width 1s ease-out;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--highlight);
+  color: var(--card-bg);
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
   font-size: 1.5rem;
-  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.closeButton:hover {
+  background-color: var(--hover);
+  transform: rotate(90deg);
+}
+
+.fishDescription,
+.fishStory {
   margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--bg2);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px var(--shadow);
+}
+
+.fishDescription h3,
+.fishStory h3 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.fishDescription p,
+.fishStory p {
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.fishResultsContent p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+  font-size: 1.1rem;
 }
 
 @media (max-width: 600px) {
   .container {
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   .title {
@@ -326,5 +389,13 @@ body {
 
   .actionButton {
     width: 100%;
+  }
+
+  .fishResultsContent h2 {
+    font-size: 2rem;
+  }
+
+  .fishJoke {
+    font-size: 1rem;
   }
 }
