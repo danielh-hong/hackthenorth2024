@@ -9,6 +9,8 @@
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 1000;
+  font-family: 'Poppins', sans-serif;
+
 }
 
 .expanded {
@@ -29,12 +31,16 @@
   cursor: pointer;
   box-sizing: border-box;
   height: 70px; /* Ensure this matches the minimized height */
+  font-family: 'Poppins', sans-serif;
+
 }
 
 .header h2 {
   margin: 0;
   font-size: 1.4rem;
   font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+
 }
 
 .content {
