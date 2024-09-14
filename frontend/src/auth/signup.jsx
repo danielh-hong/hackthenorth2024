@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
 import { ThemeContext } from '../ColorTheme';
+import { UserContext } from '../UserContext';
 import styles from './Signup.module.css';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -14,19 +14,23 @@ const Signup = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+  const { signup } = useContext(UserContext);
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    // Add your signup logic here
     if (password !== confirmPassword) {
       setError("Passwords don't match");
       return;
     }
-    console.log('Signup attempted');
+    const result = await signup(username, password);
+    if (result.success) {
+      navigate('/dashboard');
+    } else {
+      setError(result.error);
+    }
   };
 
   const handleGoogleSignup = () => {
-    // This function will do nothing as per your request
     console.log('Google signup button clicked');
   };
 
@@ -43,16 +47,6 @@ const Signup = () => {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <FaEnvelope className={styles.icon} />
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>

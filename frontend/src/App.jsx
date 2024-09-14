@@ -1,26 +1,30 @@
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from './Navbar';
-import Dashboard from './dashboard/Dashboard'; // Placeholder for the dashboard
-import Login from './auth/login'; // Placeholder for login page
-import Signup from './auth/signup'; // Placeholder for signup page
+import Dashboard from './dashboard/Dashboard';
+import Login from './auth/login';
+import Signup from './auth/signup';
 import { ThemeProvider } from './ColorTheme';
+import { UserProvider, UserContext } from './UserContext';
 import './App.css';
 
-const AppContent = () => {
-  const location = useLocation();
-  const showNavbar = !['/login', '/signup'].includes(location.pathname);
+const PrivateRoute = ({ children }) => {
+  const { user } = useContext(UserContext);
+  return user ? children : <Navigate to="/login" replace />;
+};
+
+const AppRoutes = () => {
+  const { user } = useContext(UserContext);
 
   return (
     <>
-      {showNavbar && <Navbar />}
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} /> {/* Redirect root to dashboard */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Routes>
-      </div>
+      {user && <Navbar />}
+      <Routes>
+        <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
+      </Routes>
     </>
   );
 };
@@ -29,7 +33,11 @@ const App = () => {
   return (
     <Router>
       <ThemeProvider>
-        <AppContent />
+        <UserProvider>
+          <div className="App">
+            <AppRoutes />
+          </div>
+        </UserProvider>
       </ThemeProvider>
     </Router>
   );

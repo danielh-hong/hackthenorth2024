@@ -1,18 +1,32 @@
-import React, { useState, useRef } from 'react';
-import { MdCamera, MdCameraEnhance } from 'react-icons/md';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { MdCamera, MdFileUpload, MdAutorenew, MdAnalytics } from 'react-icons/md';
+import { UserContext } from '../UserContext'; // Adjust the import path as needed
 import styles from './FishIdentifier.module.css';
 
 const FishIdentifier = () => {
   const [image, setImage] = useState(null);
   const [fishInfo, setFishInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [cameraActive, setCameraActive] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    startCamera();
+    return () => {
+      if (videoRef.current && videoRef.current.srcObject) {
+        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
       videoRef.current.srcObject = stream;
+      setCameraActive(true);
     } catch (err) {
       console.error("Error accessing the camera", err);
     }
@@ -29,12 +43,20 @@ const FishIdentifier = () => {
     }, 'image/jpeg');
   };
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage(file);
+    }
+  };
+
   const analyzeFish = async () => {
-    if (!image) return;
+    if (!image || !user) return;
 
     setIsLoading(true);
     const formData = new FormData();
     formData.append('image', image, 'fish.jpg');
+    formData.append('username', user.username);
 
     try {
       const response = await fetch('http://localhost:3001/identify-fish', {
@@ -45,7 +67,11 @@ const FishIdentifier = () => {
       if (!response.ok) throw new Error('Failed to analyze fish');
 
       const data = await response.json();
-      setFishInfo(data);
+      setFishInfo({
+        ...data,
+        dateCaught: new Date().toLocaleString(),
+        joke: generateFishJoke(data.fishName)
+      });
     } catch (error) {
       console.error('Error analyzing fish:', error);
       alert('Failed to analyze fish. Please try again.');
@@ -54,53 +80,88 @@ const FishIdentifier = () => {
     }
   };
 
+  const resetCapture = () => {
+    setImage(null);
+    setFishInfo(null);
+    startCamera();
+  };
+
+  const generateFishJoke = (fishName) => {
+    const jokes = [
+      `Why was the ${fishName} bad at basketball? It was always getting caught in the net!`,
+      `What do you call a ${fishName} wearing a bowtie? So-fish-ticated!`,
+      `How does a ${fishName} go to war? In a tank!`,
+      `Why don't ${fishName}s play soccer? They're afraid of the net!`,
+      `What do you call a ${fishName} with no eyes? Fsh!`
+    ];
+    return jokes[Math.floor(Math.random() * jokes.length)];
+  };
+
+  if (!user) {
+    return <div>Please log in to use the Fish Identifier.</div>;
+  }
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Fish Identifier</h1>
+      <h1 className={styles.title}>AquaScan</h1>
+      <p className={styles.description}>
+        Capture or upload an image of a fish, and let our AI identify it for you. 
+        Discover the species, rarity, and get a fun fact about your catch!
+      </p>
       
-      <div className={styles.cameraContainer}>
-        <video ref={videoRef} className={styles.video} autoPlay playsInline />
-        <canvas ref={canvasRef} className={styles.canvas} />
-        {!image && (
-          <button onClick={startCamera} className={styles.startButton}>
-            <MdCamera /> Start Camera
-          </button>
-        )}
-        {image && (
-          <img src={URL.createObjectURL(image)} alt="Captured fish" className={styles.capturedImage} />
-        )}
-      </div>
+      <div className={styles.captureContainer}>
+        <div className={styles.cameraContainer}>
+          <video ref={videoRef} className={styles.video} autoPlay playsInline />
+          <canvas ref={canvasRef} className={styles.canvas} />
+          {image && (
+            <img src={URL.createObjectURL(image)} alt="Captured fish" className={styles.capturedImage} />
+          )}
+        </div>
 
-      <div className={styles.buttonContainer}>
-        {!image ? (
-          <button onClick={captureImage} className={styles.captureButton}>
-            <MdCameraEnhance /> Capture Fish
+        <div className={styles.actionButtons}>
+          {!image && cameraActive && (
+            <button onClick={captureImage} className={styles.actionButton}>
+              <MdCamera /> Capture
+            </button>
+          )}
+          <button onClick={() => fileInputRef.current.click()} className={styles.actionButton}>
+            <MdFileUpload /> Upload
           </button>
-        ) : (
-          <button onClick={analyzeFish} className={styles.analyzeButton} disabled={isLoading}>
-            {isLoading ? 'Analyzing...' : 'Analyze Fish'}
-          </button>
-        )}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileUpload}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
+          {image && (
+            <>
+              <button onClick={analyzeFish} className={styles.actionButton} disabled={isLoading}>
+                <MdAnalytics /> {isLoading ? 'Analyzing...' : 'Analyze'}
+              </button>
+              <button onClick={resetCapture} className={styles.actionButton}>
+                <MdAutorenew /> Reset
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {fishInfo && (
         <div className={styles.fishInfoCard}>
-          <h2>{fishInfo.fishName}</h2>
+          <h2>You caught a {fishInfo.fishName}!</h2>
+          <p className={styles.fishJoke}>{fishInfo.joke}</p>
           <div className={styles.infoRow}>
             <span>Rarity:</span>
             <div className={styles.progressBar}>
-              <div className={styles.progress} style={{width: `${fishInfo.rarity * 10}%`}}></div>
+              <div className={styles.progress} style={{width: `${fishInfo.rarityScore * 10}%`}}></div>
             </div>
-            <span>{fishInfo.rarity}/10</span>
+            <span>{fishInfo.rarityScore}/10</span>
           </div>
-          <div className={styles.infoRow}>
-            <span>Score:</span>
-            <div className={styles.progressBar}>
-              <div className={styles.progress} style={{width: `${fishInfo.score}%`}}></div>
-            </div>
-            <span>{fishInfo.score}/100</span>
-          </div>
-          <p><strong>Habitat:</strong> {fishInfo.habitat}</p>
+          <p><strong>Date Caught:</strong> {fishInfo.dateCaught}</p>
+          <p><strong>Description:</strong> {fishInfo.description}</p>
+          <p><strong>Location:</strong> {fishInfo.location}</p>
+          <p><strong>Fish Story:</strong> {fishInfo.fishStory}</p>
         </div>
       )}
     </div>

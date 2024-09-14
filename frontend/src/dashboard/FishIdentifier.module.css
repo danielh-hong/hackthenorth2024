@@ -1,98 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
 .container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
 }
 
 .title {
+  font-size: 2.5rem;
+  font-weight: 700;
   text-align: center;
+  margin-bottom: 1rem;
   color: #2c3e50;
-  margin-bottom: 20px;
+}
+
+.description {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.captureContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .cameraContainer {
-  position: relative;
   width: 100%;
-  height: 0;
-  padding-bottom: 75%; /* 4:3 Aspect Ratio */
-  background-color: #34495e;
-  border-radius: 10px;
+  max-width: 500px;
+  aspect-ratio: 4 / 3;
+  background-color: #f0f0f0;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .video, .canvas, .capturedImage {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.startButton, .captureButton, .analyzeButton {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  font-size: 18px;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.actionButton {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #3498db;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.startButton {
-  background-color: #3498db;
+.actionButton:hover {
+  background-color: #2980b9;
 }
 
-.captureButton {
-  background-color: #2ecc71;
-}
-
-.analyzeButton {
-  background-color: #e74c3c;
-}
-
-.startButton:hover, .captureButton:hover, .analyzeButton:hover {
-  opacity: 0.9;
+.actionButton:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 
 .fishInfoCard {
-  background-color: #ecf0f1;
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .fishInfoCard h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
   color: #2c3e50;
-  margin-top: 0;
 }
 
 .infoRow {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 }
 
 .infoRow span {
   flex: 1;
+  font-weight: 600;
 }
 
 .progressBar {
   flex: 2;
-  height: 10px;
-  background-color: #bdc3c7;
-  border-radius: 5px;
+  height: 8px;
+  background-color: #ecf0f1;
+  border-radius: 4px;
   overflow: hidden;
-  margin: 0 10px;
+  margin: 0 1rem;
 }
 
 .progress {
@@ -101,6 +118,35 @@
   transition: width 0.5s ease-out;
 }
 
-.canvas {
-  display: none;
+.fishInfoCard p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.fishJoke {
+  font-style: italic;
+  margin-bottom: 1rem;
+  color: #e67e22;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .actionButton {
+    width: 100%;
+  }
 }

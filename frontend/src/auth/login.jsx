@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock, FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa';
 import { ThemeContext } from '../ColorTheme';
+import { UserContext } from '../UserContext';
 import styles from './login.module.css';
 
 const Login = () => {
@@ -11,15 +12,19 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+  const { login } = useContext(UserContext);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log('Login attempted');
+    const result = await login(username, password);
+    if (result.success) {
+      navigate('/dashboard');
+    } else {
+      setError(result.error);
+    }
   };
 
   const handleGoogleLogin = () => {
-    // This function will do nothing as per your request
     console.log('Google login button clicked');
   };
 

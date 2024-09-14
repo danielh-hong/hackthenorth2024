@@ -166,6 +166,22 @@
   font-size: 1.5rem;
 }
 
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.userIcon {
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.username {
+  font-weight: bold;
+}
+
+
 @media (max-width: 768px) {
   .navLeft {
     flex-grow: 1;

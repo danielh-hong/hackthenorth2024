@@ -1,12 +1,20 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { MdLogout, MdDashboard, MdMenu, MdClose, MdWbSunny, MdNightlight } from 'react-icons/md';
+import { Link, useNavigate } from 'react-router-dom';
+import { MdLogout, MdDashboard, MdMenu, MdClose, MdWbSunny, MdNightlight, MdPerson } from 'react-icons/md';
 import { ThemeContext } from './ColorTheme';
+import { UserContext } from './UserContext';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const { user, logout } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -25,6 +33,10 @@ const Navbar = () => {
           </div>
         </div>
         <div className={styles.navRight}>
+          <div className={styles.userInfo}>
+            <MdPerson className={styles.userIcon} />
+            <span className={styles.username}>{user?.username}</span>
+          </div>
           <div className={styles.themeToggleWrapper}>
             <input
               type="checkbox"
@@ -42,7 +54,7 @@ const Navbar = () => {
               </div>
             </label>
           </div>
-          <button className={styles.logoutButton} aria-label="Logout">
+          <button className={styles.logoutButton} onClick={handleLogout} aria-label="Logout">
             <MdLogout className={styles.logoutIcon} />
             <span className={styles.logoutText}>Logout</span>
           </button>
