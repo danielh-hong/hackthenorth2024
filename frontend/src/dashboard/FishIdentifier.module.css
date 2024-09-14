@@ -1,0 +1,106 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.cameraContainer {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%; /* 4:3 Aspect Ratio */
+  background-color: #34495e;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.video, .canvas, .capturedImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.startButton, .captureButton, .analyzeButton {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  font-size: 18px;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.startButton {
+  background-color: #3498db;
+}
+
+.captureButton {
+  background-color: #2ecc71;
+}
+
+.analyzeButton {
+  background-color: #e74c3c;
+}
+
+.startButton:hover, .captureButton:hover, .analyzeButton:hover {
+  opacity: 0.9;
+}
+
+.fishInfoCard {
+  background-color: #ecf0f1;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.fishInfoCard h2 {
+  color: #2c3e50;
+  margin-top: 0;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.infoRow span {
+  flex: 1;
+}
+
+.progressBar {
+  flex: 2;
+  height: 10px;
+  background-color: #bdc3c7;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 0 10px;
+}
+
+.progress {
+  height: 100%;
+  background-color: #3498db;
+  transition: width 0.5s ease-out;
+}
+
+.canvas {
+  display: none;
+}
