@@ -115,10 +115,6 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
   if (isNaN(lat) || isNaN(lon) || !isFinite(lat) || !isFinite(lon)) {
     return res.status(400).json({ error: 'Invalid latitude or longitude' });
   }
-
-  // Validate latitude and longitude
-  const lat = parseFloat(latitude);
-  const lon = parseFloat(longitude);
   
   console.log('Parsed latitude and longitude:', { lat, lon });
 
@@ -189,7 +185,7 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
           dateCaught: new Date(),
           timesCaught: 1
         });
-
+      }
       // Create a new FishCatch document
       const newFishCatch = new FishCatch({
         ...fishInfo,
