@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import records from "./routes/record.js";
+// import records from "./routes/record.js";
 
 const cohere = require('cohere-ai');
 cohere.init(process.env.COHERE_API_KEY);
@@ -10,7 +10,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/record", records);
+// app.use("/record", records);
 
 // start the Express server
 app.listen(PORT, () => {
