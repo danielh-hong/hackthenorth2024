@@ -140,7 +140,8 @@ const FishIdentifier = () => {
     setImage(null);
     setFishInfo(null);
     setIsResultsModalOpen(false);
-  };
+    setAttachedImages([]);
+  }; // needs work
 
 
   const generateFishJoke = (fishName) => {
