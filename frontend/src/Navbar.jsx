@@ -21,7 +21,7 @@ const Navbar = () => {
       <div className={styles.navContainer}>
         <div className={styles.navLeft}>
           <Link to="/" className={styles.brandLink}>
-            <img src="/logo.png" alt="Logo" className={styles.logo} />
+            <img src="/logo.png" alt="Logo" className={styles.logo}/>
             <span className={styles.brandText}>FishyDash</span>
           </Link>
           <div className={`${styles.navLinks} ${isMenuOpen ? styles.active : ''}`}>
