@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Sphere, useTexture } from "@react-three/drei";
 import { ClownFishModel } from "../components/ClownFishComponent";
 import { TroutFishModel } from "../components/TroutFishComponent";
+import { CarpFishModel } from "../components/CarpFishComponent";
 import { DoubleSide, RepeatWrapping } from "three";
 import * as THREE from "three";
 import FishModal from "./FishModal";
@@ -71,11 +72,15 @@ const fishModelMatcher = (fishName) => {
   if (name.includes('trout') || name.includes('salmon') || name.includes('char')) {
     return TroutFishModel;
   }
+
+  if (name.includes('carp')) {
+    return CarpFishModel;
+  }
   
   // Add more specific fish types here as you add more models
   
   // If no specific match, return a random model
-  const models = [ClownFishModel, TroutFishModel]; // Add more models to this array as you create them
+  const models = [ClownFishModel, TroutFishModel, CarpFishModel]; // Add more models to this array as you create them
   return models[Math.floor(Math.random() * models.length)];
 };
 
