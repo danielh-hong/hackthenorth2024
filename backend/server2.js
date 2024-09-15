@@ -215,28 +215,70 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
 });
 
 app.get('/get-all-fish-catches', async (req, res) => {
-  try {
-    // Fetch all fish catches from the database
-    const fishCatches = await FishCatch.find({}).populate('caughtBy', 'username');
+  const { query } = req.query;
+  const { username } = req.username;
 
-    // Transform the data to include the username and format the location
-    const formattedFishCatches = fishCatches.map(fishCatch => {
+  const filter = {};
+  
+  if (query) {
+    const parsedRarity = parseFloat(query);
+    
+    if (!isNaN(parsedRarity)) {
+      filter.rarityScore = parsedRarity;
+    } else {
+      filter.fishName = { $regex: query, $options: 'i' };
+    }
+  }
+  if (username) {
+    const fishCatches = await FishCatch.find(filter)
+    .populate({
+      path: 'caughtBy',
+      match: { username: targetUsername },  // Filters for documents where the 'caughtBy' username matches
+      select: 'username'
+    });
+
+  // Transform the data
+  const formattedFishCatches = fishCatches
+    .filter(fishCatch => fishCatch.caughtBy) // Filters out documents where 'caughtBy' is null
+    .map(fishCatch => {
       const catchObject = fishCatch.toObject();
       return {
         ...catchObject,
-        username: catchObject.caughtBy ? catchObject.caughtBy.username : 'Unknown User',
+        username: catchObject.caughtBy.username,
         location: `${catchObject.latitude},${catchObject.longitude}`,
-        caughtBy: undefined // Remove the caughtBy field to avoid sending unnecessary data
+        caughtBy: undefined
       };
     });
-
     res.json(formattedFishCatches);
-  } catch (error) {
-    console.error('Error fetching fish catches:', error);
-    res.status(500).json({ error: 'An error occurred while fetching fish catches' });
+  } else {
+    try {
+      // Fetch all fish catches from the database
+      const fishCatches = await FishCatch.find(filter).populate('caughtBy', 'username');
+  
+      // Transform the data to include the username and format the location
+      const formattedFishCatches = fishCatches.map(fishCatch => {
+        const catchObject = fishCatch.toObject();
+        return {
+          ...catchObject,
+          username: catchObject.caughtBy ? catchObject.caughtBy.username : 'Unknown User',
+          location: `${catchObject.latitude},${catchObject.longitude}`,
+          caughtBy: undefined // Remove the caughtBy field to avoid sending unnecessary data
+        };
+      });
+  
+  
+      res.json(formattedFishCatches);
+    } catch (error) {
+      console.error('Error fetching fish catches:', error);
+      res.status(500).json({ error: 'An error occurred while fetching fish catches' });
+    }
   }
+  
 });
 
+/*
+
+*/
 
 
 app.get('/recent-fish-catches', async (req, res) => {

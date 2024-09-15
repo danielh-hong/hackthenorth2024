@@ -25,6 +25,7 @@
   --hover: #E5E7EB; /* Hover color */
   --shadow: rgba(0, 0, 0, 0.1); /* Shadow color */
   --modal-bg: rgba(0, 0, 0, 0.8); /* Modal background */
+  --popup-bg-color: lightgray; 
 }
 
 [data-theme='dark'] {
@@ -39,6 +40,7 @@
   --hover: #374151;
   --shadow: rgba(255, 255, 255, 0.1);
   --modal-bg: rgba(0, 0, 0, 0.8);
+  --popup-bg-color: black; 
 }
 
 /* Scrollbar styling */

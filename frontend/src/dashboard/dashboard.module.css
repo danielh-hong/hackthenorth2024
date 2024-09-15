@@ -24,3 +24,8 @@
     pointer-events: none;
 
 }
+
+.fishIndex {
+    padding-top: 60px; 
+    float: right; /* something like that */
+}
