@@ -230,24 +230,23 @@ app.get('/get-all-fish-catches', async (req, res) => {
     }
   }
   if (username) {
-    const fishCatches = await FishCatch.find(filter)
-    .populate({
-      path: 'caughtBy',
-      match: { username: targetUsername },  // Filters for documents where the 'caughtBy' username matches
-      select: 'username'
-    });
-
-  // Transform the data
-  const formattedFishCatches = fishCatches
-    .filter(fishCatch => fishCatch.caughtBy) // Filters out documents where 'caughtBy' is null
-    .map(fishCatch => {
-      const catchObject = fishCatch.toObject();
-      return {
-        ...catchObject,
-        username: catchObject.caughtBy.username,
-        location: `${catchObject.latitude},${catchObject.longitude}`,
-        caughtBy: undefined
-      };
+    const fishCatches = await FishCatch.find({ 
+      $and: [
+        filter,
+        { caughtBy: username }
+      ]
+    })
+    // Transform the data
+    const formattedFishCatches = fishCatches
+      .filter(fishCatch => fishCatch.caughtBy) // Filters out documents where 'caughtBy' is null
+      .map(fishCatch => {
+        const catchObject = fishCatch.toObject();
+        return {
+          ...catchObject,
+          username: catchObject.caughtBy.username,
+          location: `${catchObject.latitude},${catchObject.longitude}`,
+          caughtBy: undefined
+        };
     });
     res.json(formattedFishCatches);
   } else {
