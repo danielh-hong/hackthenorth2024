@@ -151,8 +151,19 @@ const FishIdentifier = () => {
       `What do you call a ${fishName} wearing a bowtie? So-fish-ticated!`,
       `How does a ${fishName} go to war? In a tank!`,
       `Why don't ${fishName}s play soccer? They're afraid of the net!`,
-      `What do you call a ${fishName} with no eyes? Fsh!`
+      `What do you call a ${fishName} with no eyes? Fsh!`,
+      `How did the ${fishName} find out it was in trouble? It was on the hook!`,
+      `How did the ${fishName} get rich? Phishing!`,
+      `Where do ${fishName}s get their energy from? Nuclear fishion!`,
+      `Where do ${fishName}s store their money? In the river bank!`,
     ];
+    /*
+    magic carp
+    loan shark
+    goldfish 
+
+    something for no fish
+    */
     return jokes[Math.floor(Math.random() * jokes.length)];
   };
 
