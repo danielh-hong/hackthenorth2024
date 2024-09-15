@@ -173,25 +173,27 @@
 
 .closeButton {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: var(--highlight);
-  color: var(--card-bg);
+  top: 0.2rem;
+  right: 0.2rem;
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 2.5rem;
-  height: 2.5rem;
-  font-size: 1.5rem;
+  color: var(--text);
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 .closeButton:hover {
-  background-color: var(--hover);
-  transform: rotate(90deg);
+  color: var(--primary);
+}
+
+.closeButton:focus {
+  outline: none;
+  color: var(--primary);
 }
 
 .fishResultsTitle {

@@ -213,6 +213,13 @@ const FishIdentifier = () => {
       {isCameraModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
+            <button 
+              onClick={() => setIsCameraModalOpen(false)} 
+              className={styles.closeButton}
+              aria-label="Close camera modal"
+            >
+              <MdClose />
+            </button>
             <div className={styles.cameraPreview}>
               <video ref={videoRef} autoPlay playsInline className={styles.videoPreview} />
               <div className={styles.cameraOverlay}>
@@ -221,7 +228,6 @@ const FishIdentifier = () => {
             </div>
             <div className={styles.modalActions}>
               <button onClick={captureImage} className={styles.captureButton}>Capture Fish</button>
-              <button onClick={() => setIsCameraModalOpen(false)} className={styles.closeButton}>Close</button>
             </div>
           </div>
         </div>
