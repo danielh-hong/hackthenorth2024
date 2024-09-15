@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { MdImage, MdCamera, MdFileUpload, MdAutorenew, MdAnalytics, MdAddAPhoto, MdClose } from 'react-icons/md';
 import { FaFish } from 'react-icons/fa';
 import FishResultsModal from './FishResultsModal';
+import FishUnlockedNotification from './FishUnlockedNotification';
 import { UserContext } from '../UserContext';
 import styles from './FishIdentifier.module.css';
 
@@ -13,6 +14,7 @@ const FishIdentifier = () => {
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
   const [isAttachedImagesModalOpen, setIsAttachedImagesModalOpen] = useState(false);
+  const [showUnlockedNotification, setShowUnlockedNotification] = useState(false);
   const [location, setLocation] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -95,7 +97,6 @@ const FishIdentifier = () => {
     }
   };
 
-
   const analyzeFish = async () => {
     if (!image || !user || !location) {
       alert('Missing image, user, or location data. Please try again.');
@@ -126,7 +127,16 @@ const FishIdentifier = () => {
         dateCaught: new Date().toLocaleString(),
         joke: generateFishJoke(data.fishName)
       });
-      setIsResultsModalOpen(true);
+
+      // Show the unlocked notification
+      setShowUnlockedNotification(true);
+
+      // Automatically transition to fish info after 3 seconds
+      setTimeout(() => {
+        setShowUnlockedNotification(false);
+        setIsResultsModalOpen(true);
+      }, 4000);
+
     } catch (error) {
       console.error('Error analyzing fish:', error);
       alert(error.message || 'Failed to analyze fish. Please try again.');
@@ -136,14 +146,12 @@ const FishIdentifier = () => {
     }
   };
 
-
   const resetCapture = () => {
     setImage(null);
     setFishInfo(null);
     setIsResultsModalOpen(false);
     setAttachedImages([]);
-  }; // needs work
-
+  };
 
   const generateFishJoke = (fishName) => {
     const jokes = [
@@ -157,13 +165,6 @@ const FishIdentifier = () => {
       `Where do ${fishName}s get their energy from? Nuclear fishion!`,
       `Where do ${fishName}s store their money? In the river bank!`,
     ];
-    /*
-    magic carp
-    loan shark
-    goldfish 
-
-    something for no fish
-    */
     return jokes[Math.floor(Math.random() * jokes.length)];
   };
 
@@ -173,10 +174,7 @@ const FishIdentifier = () => {
 
   return (
     <div className={styles.container}>
-
-      
       <div className={styles.captureContainer}>
-
         <div className={styles.actionButtons}>
           <button onClick={() => setIsCameraModalOpen(true)} className={`${styles.actionButton} ${styles.cameraButton}`}>
             <MdCamera /> Capture Fish
@@ -201,7 +199,6 @@ const FishIdentifier = () => {
               </button>
             </>
           )}
-
           {attachedImages.length > 0 && (
             <button 
               onClick={() => setIsAttachedImagesModalOpen(true)} 
@@ -212,7 +209,6 @@ const FishIdentifier = () => {
           )}
         </div>
       </div>
-
 
       {isCameraModalOpen && (
         <div className={styles.modal}>
@@ -231,6 +227,12 @@ const FishIdentifier = () => {
         </div>
       )}
       <canvas ref={canvasRef} style={{ display: 'none' }} width="640" height="480" />
+
+      {showUnlockedNotification && (
+        <FishUnlockedNotification
+          onComplete={() => setShowUnlockedNotification(false)}
+        />
+      )}
 
       {isResultsModalOpen && fishInfo && (
         <FishResultsModal
@@ -260,7 +262,6 @@ const FishIdentifier = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
