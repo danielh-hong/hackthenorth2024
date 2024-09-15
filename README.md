@@ -63,11 +63,14 @@ Many fishing enthusiasts struggle to keep track of their catches in a meaningful
 
 ## Screenshots
 
+<img width="1440" alt="Screenshot 2024-09-15 at 6 51 24 AM" src="https://github.com/user-attachments/assets/f93ed8e6-6b46-4562-944b-f8b52fe31626">
+
+<img width="1440" alt="Screenshot 2024-09-15 at 6 52 05 AM" src="https://github.com/user-attachments/assets/eff66ddf-3181-4bfc-bdc6-4ed0a055eba4">
 
 
 ## Future Features
 
-
+In the future, we aim to develop and train a custom machine learning model using technologies like TensorFlow or PyTorch, which will enable more accurate fish species identification, personalized catch predictions based on user history, and even more engaging, context-aware story generation.
 
 ## Contributing
 
