@@ -6,6 +6,7 @@ import Login from './auth/login';
 import Signup from './auth/signup';
 import { ThemeProvider } from './ColorTheme';
 import { UserProvider, UserContext } from './UserContext';
+import FishAchievements from './Achievements';
 
 import FishCatchMap from './FishCatchMap';
 
@@ -26,6 +27,7 @@ const AppRoutes = () => {
         <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
         <Route path="/signup" element={user ? <Navigate to="/dashboard" replace /> : <Signup />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/achievements" element={<PrivateRoute><FishAchievements /></PrivateRoute>} />
         <Route path="/map" element={<PrivateRoute><FishCatchMap /></PrivateRoute>} />
         <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
       </Routes>

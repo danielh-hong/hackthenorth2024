@@ -33,6 +33,10 @@ const Navbar = () => {
               <MdDashboard className={styles.linkIcon} />
               <span className={styles.linkText}>Map</span>
             </Link>
+            <Link to="/achievements" className={styles.navLink}>
+              <MdDashboard className={styles.linkIcon} />
+              <span className={styles.linkText}>Your Fishing Journey</span>
+            </Link>
             {/* Add more nav links here */}
           </div>
         </div>
