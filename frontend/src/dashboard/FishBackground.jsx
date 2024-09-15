@@ -131,7 +131,7 @@ function FishBackground() {
     const fetchFishCatches = async () => {
       if (!user) return;
       try {
-        const response = await fetch(`http://localhost:3001/user-fish-catches?username=${user.username}`);
+        const response = await fetch(`http://localhost:3001/get-all-fish-catches?username=${user.username}`);
         if (!response.ok) throw new Error('Failed to fetch fish catches');
         const data = await response.json();
         setFishCatches(data);

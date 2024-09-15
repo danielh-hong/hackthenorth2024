@@ -26,6 +26,15 @@
 }
 
 .fishIndex {
-    padding-top: 60px; 
-    float: right; /* something like that */
+    position: absolute; /* Make it absolute */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    padding: 3rem;
+    box-sizing: border-box;
+    z-index: 1000; /* Optional: Ensure it is on top of other elements */
+    pointer-events: none;
+
+
 }

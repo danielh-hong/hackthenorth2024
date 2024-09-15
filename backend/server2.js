@@ -215,8 +215,7 @@ app.post('/identify-fish', upload.single('image'), async (req, res) => {
 });
 
 app.get('/get-all-fish-catches', async (req, res) => {
-  const { query } = req.query;
-  const { username } = req.username;
+  const { query, username } = req.query;
 
   const filter = {};
   
@@ -229,56 +228,41 @@ app.get('/get-all-fish-catches', async (req, res) => {
       filter.fishName = { $regex: query, $options: 'i' };
     }
   }
-  if (username) {
-    const fishCatches = await FishCatch.find(filter)
-    .populate({
-      path: 'caughtBy',
-      match: { username: targetUsername },  // Filters for documents where the 'caughtBy' username matches
-      select: 'username'
-    });
 
-  // Transform the data
-  const formattedFishCatches = fishCatches
-    .filter(fishCatch => fishCatch.caughtBy) // Filters out documents where 'caughtBy' is null
-    .map(fishCatch => {
+  try {
+    let fishCatches;
+    if (username) {
+      const user = await User.findOne({ username });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      filter.caughtBy = user._id;
+    }
+
+    fishCatches = await FishCatch.find(filter).populate('caughtBy', 'username');
+
+    // Transform the data to include the username and format the location
+    const formattedFishCatches = fishCatches.map(fishCatch => {
       const catchObject = fishCatch.toObject();
       return {
         ...catchObject,
-        username: catchObject.caughtBy.username,
+        username: catchObject.caughtBy ? catchObject.caughtBy.username : 'Unknown User',
         location: `${catchObject.latitude},${catchObject.longitude}`,
-        caughtBy: undefined
+        caughtBy: undefined // Remove the caughtBy field to avoid sending unnecessary data
       };
     });
-    res.json(formattedFishCatches);
-  } else {
-    try {
-      // Fetch all fish catches from the database
-      const fishCatches = await FishCatch.find(filter).populate('caughtBy', 'username');
-  
-      // Transform the data to include the username and format the location
-      const formattedFishCatches = fishCatches.map(fishCatch => {
-        const catchObject = fishCatch.toObject();
-        return {
-          ...catchObject,
-          username: catchObject.caughtBy ? catchObject.caughtBy.username : 'Unknown User',
-          location: `${catchObject.latitude},${catchObject.longitude}`,
-          caughtBy: undefined // Remove the caughtBy field to avoid sending unnecessary data
-        };
-      });
-  
-  
-      res.json(formattedFishCatches);
-    } catch (error) {
-      console.error('Error fetching fish catches:', error);
-      res.status(500).json({ error: 'An error occurred while fetching fish catches' });
-    }
-  }
-  
-});
 
+    res.json(formattedFishCatches);
+  } catch (error) {
+    console.error('Error fetching fish catches:', error);
+    res.status(500).json({ error: 'An error occurred while fetching fish catches' });
+  }
+});
 /*
 
 */
+
+// Add this new route in your server.js file
 
 app.get('/user-fish-catches', async (req, res) => {
   try {
@@ -300,7 +284,7 @@ app.get('/user-fish-catches', async (req, res) => {
       ...fishCatch,
       username: user.username,
       location: `${fishCatch.latitude},${fishCatch.longitude}`,
-      caughtBy: undefined
+      caughtBy: undefined // Remove caughtBy to avoid sending unnecessary data
     }));
 
     res.json(formattedFishCatches);
