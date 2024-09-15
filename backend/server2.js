@@ -238,6 +238,36 @@ app.get('/get-all-fish-catches', async (req, res) => {
 });
 
 
+app.get('/user-fish-catches', async (req, res) => {
+  try {
+    const { username } = req.query;
+    if (!username) {
+      return res.status(400).json({ error: 'Username is required' });
+    }
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const fishCatches = await FishCatch.find({ caughtBy: user._id })
+      .sort({ dateCaught: -1 }) // Sort by date, newest first
+      .lean(); // Use lean() for better performance if you don't need Mongoose document methods
+
+    const formattedFishCatches = fishCatches.map(fishCatch => ({
+      ...fishCatch,
+      username: user.username,
+      location: `${fishCatch.latitude},${fishCatch.longitude}`,
+      caughtBy: undefined
+    }));
+
+    res.json(formattedFishCatches);
+  } catch (error) {
+    console.error('Error fetching user fish catches:', error);
+    res.status(500).json({ error: 'An error occurred while fetching user fish catches' });
+  }
+});
+
 
 app.get('/recent-fish-catches', async (req, res) => {
   const { query } = req.query;

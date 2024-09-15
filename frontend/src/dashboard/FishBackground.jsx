@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Suspense } from "react";
+import React, { useEffect, useRef, useState, Suspense, useContext } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Sphere, useTexture } from "@react-three/drei";
 import { ClownFishModel } from "../components/ClownFishComponent";
@@ -9,6 +9,8 @@ import FishModal from "./FishModal";
 import Corals from "../components/Corals";
 import ClickableFish from "./ClickableFish";
 import styles from './FishBackground.module.css';
+import { UserContext } from '../UserContext';
+
 
 // Subtle bubbles with sleek movement and dissipation (increased number)
 function Bubbles() {
@@ -58,6 +60,26 @@ function LightRays() {
   );
 }
 
+
+const fishModelMatcher = (fishName) => {
+  const name = fishName.toLowerCase().replace(/[-\s]/g, '');
+  
+  if (name.includes('clown') || name.includes('anemone')) {
+    return ClownFishModel;
+  }
+  
+  if (name.includes('trout') || name.includes('salmon') || name.includes('char')) {
+    return TroutFishModel;
+  }
+  
+  // Add more specific fish types here as you add more models
+  
+  // If no specific match, return a random model
+  const models = [ClownFishModel, TroutFishModel]; // Add more models to this array as you create them
+  return models[Math.floor(Math.random() * models.length)];
+};
+
+
 // Ocean floor with fading edges
 function OceanFloor() {
   const texture = useTexture('./sand.jpg'); // Load sand texture
@@ -102,11 +124,14 @@ function OceanSkybox() {
 function FishBackground() {
   const [fishCatches, setFishCatches] = useState([]);
   const [selectedFish, setSelectedFish] = useState(null);
+  const { user } = useContext(UserContext);
+  const eventSourceRef = useRef(null);
 
   useEffect(() => {
     const fetchFishCatches = async () => {
+      if (!user) return;
       try {
-        const response = await fetch('http://localhost:3001/get-all-fish-catches');
+        const response = await fetch(`http://localhost:3001/user-fish-catches?username=${user.username}`);
         if (!response.ok) throw new Error('Failed to fetch fish catches');
         const data = await response.json();
         setFishCatches(data);
@@ -114,8 +139,30 @@ function FishBackground() {
         console.error('Error fetching fish catches:', error);
       }
     };
+
     fetchFishCatches();
-  }, []);
+
+    // Set up SSE for real-time updates
+    if (user) {
+      eventSourceRef.current = new EventSource(`http://localhost:3001/fish-updates?username=${user.username}`);
+      
+      eventSourceRef.current.onmessage = (event) => {
+        const newFish = JSON.parse(event.data);
+        setFishCatches(prevFishes => [...prevFishes, newFish]);
+      };
+
+      eventSourceRef.current.onerror = (error) => {
+        console.error('SSE Error:', error);
+        eventSourceRef.current.close();
+      };
+    }
+
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
+  }, [user]);
 
   const handleFishClick = (fish) => setSelectedFish(fish);
 
@@ -131,16 +178,9 @@ function FishBackground() {
           minPolarAngle={Math.PI / 5}
         />
 
-        {/* Keep the Sun Rays to illuminate fish and coral */}
         <LightRays />
-
-        {/* Fading Ocean Floor */}
         <OceanFloor />
-
-        {/* Subtle Bubbles within the tank */}
         <Bubbles />
-
-        {/* Ocean Skybox for wrapping the entire scene */}
         <OceanSkybox />
 
         <ambientLight intensity={1.3} />
@@ -153,7 +193,7 @@ function FishBackground() {
               fish={fish}
               index={index}
               onClick={handleFishClick}
-              ModelComponent={index % 2 === 0 ? ClownFishModel : TroutFishModel}
+              ModelComponent={fishModelMatcher(fish.fishName)}
             />
           ))}
           <Corals dimensions={[35, 19.8, 30]} num={100} />
