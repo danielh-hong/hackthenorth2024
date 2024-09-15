@@ -132,6 +132,7 @@ const FishIdentifier = () => {
       alert(error.message || 'Failed to analyze fish. Please try again.');
     } finally {
       setIsLoading(false);
+      setAttachedImages([]);
     }
   };
 

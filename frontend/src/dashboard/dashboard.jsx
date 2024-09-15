@@ -4,6 +4,7 @@ import FishIdentifier from './FishIdentifier';
 import { UserContext } from '../UserContext'; // Adjust the import path as needed
 import styles from './dashboard.module.css';
 import FishBackground from './FishBackground';
+import FishIndexPanel from './FishIndexPanel';
 import { Fish } from 'lucide-react';
 
 const Dashboard = () => {
@@ -28,8 +29,12 @@ const Dashboard = () => {
       <div className={styles.fishIdentifier}>
         <FishIdentifier />
       </div>
+      <div className={styles.fishIndex}>
+      <FishIndexPanel /> 
+      </div>
     </div>
   );
 };
+// <FishIndexPanel /> 
 
 export default Dashboard;
