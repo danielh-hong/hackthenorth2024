@@ -1,7 +1,7 @@
 .panel {
     position: absolute;
-    margin-top: 40px; 
-    right: 20px;
+    margin-top: 30px; 
+    right: 15px;
     width: 350px;
     max-height: calc(100% - 150px);
     background-color: var(--bg2);
