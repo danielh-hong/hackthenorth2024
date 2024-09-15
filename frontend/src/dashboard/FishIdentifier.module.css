@@ -37,9 +37,9 @@
 
 .modal {
   position: fixed;
-  top: 0;
+  top: 45px;
   left: 0;
-  width: 100%;
+  width: 98%;
   height: 100%;
   background-color: var(--modal-bg);
   display: flex;
@@ -173,8 +173,8 @@
 
 .closeButton {
   position: absolute;
-  top: 0.2rem;
-  right: 0.2rem;
+  top: 0.05rem;
+  right: 0.1rem;
   background: none;
   border: none;
   color: var(--text);
