@@ -6,11 +6,11 @@ LureLore is an innovative application designed to enhance the fishing experience
 
 ## Problem Statement
 
-Many fishing enthusiasts struggle to keep track of their catches in a meaningful way, often relying on basic photos that fail to capture the full experience. [Project Name] solves this by transforming each catch into a rich, interactive memory complete with AI-generated stories, rarity ratings, and a virtual aquarium, turning fleeting moments into lasting, shareable experiences.
+Many fishing enthusiasts struggle to keep track of their catches in a meaningful way, often relying on basic photos that fail to capture the full experience. LureLore solves this by transforming each catch into a rich, interactive memory complete with AI-generated stories, rarity ratings, and a virtual aquarium, turning fleeting moments into lasting, shareable experiences.
 
 ## Features
 
-- Fish species identification using AI (Gemini)
+- Fish species identification using AI
 - Rarity rating for each catch
 - Location and time tracking
 - AI-generated "Fish Tale" for each catch
@@ -24,6 +24,7 @@ Many fishing enthusiasts struggle to keep track of their catches in a meaningful
 - Backend: Node.js, Express
 - Database: MongoDB Atlas
 - AI: Google's Gemini API
+- Leaflet API
 
 ## Installation
 
