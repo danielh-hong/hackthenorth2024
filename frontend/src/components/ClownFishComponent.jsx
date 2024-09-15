@@ -23,9 +23,9 @@ export function ClownFishModel(props) {
   useEffect(() => {
     setRadiusFac(Math.random() * 0.005 + 0.005);
     setPos([
-      20 * (Math.random() - 0.5),
+      18 * (Math.random() - 0.5),
       props.index * 10 - 5,
-      10 * (Math.random() - 0.5),
+      9 * (Math.random() - 0.5),
     ]);
     let angle = Math.random() * 2 * 3.141;
     setRotY(angle);

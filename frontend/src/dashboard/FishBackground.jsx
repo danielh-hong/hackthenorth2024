@@ -90,11 +90,11 @@ function FishBackground() {
           <pointLight
             position={[50, 50, 30]}
             color={[1, 1, 1]}
-            intensity={0.1}
+            intensity={0.25}
           />
         </>
 
-        <ambientLight color={[1, 1, 1]} intensity={0.15} />
+        <ambientLight color={[1.9, 1, 1]} intensity={1} />
 
         <Suspense>
           {new Array(20).fill(0).map((el, ind) => {
@@ -113,14 +113,20 @@ function FishBackground() {
           scale={[30, 20, 20]}
           position={[0, 0, 0]}
           color={[0, 0.25, 0.5]}
-          opacity={0.3}
+          opacity={0.35}
         />
 
+        <directionalLight
+          color={[1, 1, 1]}
+          intensity={2.5}
+          position={[10, 10, 10]}
+          castShadow
+        />
         <Plane
           color={[0, 0.2, 0.3]}
-          size={[30, 20]}
+          size={[100, 79]}
           position={[0, -10, 0]}
-          opacity={0.8}
+          opacity={0.9}
           key={5}
           recieveShadow
         />

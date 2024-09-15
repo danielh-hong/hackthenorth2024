@@ -49,7 +49,7 @@ export function TroutFishModel(props) {
   useEffect(() => {
     setRadiusFac(Math.random() * 0.01 + 0.005); // Adjust speed of rotation
     setPos([
-      20 * (Math.random() - 0.5),
+      15 * (Math.random() - 0.5),
       props.index * 10 - 5,
       6 * (Math.random() - 0.5),
     ]);
