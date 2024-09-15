@@ -12,7 +12,7 @@ function ClickableFish({ fish, index, onClick, ModelComponent }) {
       <ModelComponent scale={0.1} index={index / 20} />
       <Text
         position={[0, 1, 0]}
-        fontSize={0.5}
+        fontSize={-505}
         color="white"
         anchorX="center"
         anchorY="middle"

@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "dotenv": "^16.4.5",
-    "mongoose": "^8.6.2"
+    "framer-motion": "^11.5.4",
+    "mongoose": "^8.6.2",
+    "react-confetti": "^6.1.0"
   }
 }

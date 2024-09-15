@@ -132,7 +132,7 @@ const FishCatchMap = () => {
                   <p><strong>Length:</strong> {fishCatch.length} cm</p>
                   <p><strong>Date Caught:</strong> {moment(fishCatch.dateCaught).format('YYYY-MM-DD HH:mm:ss')}</p>
                   <p><strong>Description:</strong> {fishCatch.description}</p>
-                  <p><strong>Fish Story:</strong> {fishCatch.fishStory}</p>
+                  <p><strong>Fish Tale:</strong> {fishCatch.fishStory}</p>
                 </div>
               </Popup>
             </Marker>

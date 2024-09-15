@@ -1,4 +1,5 @@
 import React from 'react';
+import { MdClose } from 'react-icons/md';
 import styles from './FishModal.module.css';
 
 const FishModal = ({ fish, onClose }) => {
@@ -7,7 +8,9 @@ const FishModal = ({ fish, onClose }) => {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>&times;</button>
+        <button className={styles.closeButton} onClick={onClose} aria-label="Close modal">
+          <MdClose />
+        </button>
         <h2 className={styles.fishName}>{fish.fishName}</h2>
         <div className={styles.fishInfo}>
           <p><strong>Rarity Score:</strong> <span className={styles.rarityScore}>{fish.rarityScore}</span></p>
@@ -22,7 +25,7 @@ const FishModal = ({ fish, onClose }) => {
           <p>{fish.description}</p>
         </div>
         <div className={styles.fishStory}>
-          <h3>Fish Story</h3>
+          <h3>Fish Tale:</h3>
           <p>{fish.fishStory}</p>
         </div>
       </div>

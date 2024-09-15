@@ -1,21 +1,21 @@
 .panel {
-    position: absolute;
-    margin-top: 30px; 
-    right: 15px;
-    width: 350px;
-    max-height: calc(100% - 150px);
-    background-color: var(--bg2);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    z-index: 1000;
-    font-family: 'Poppins', sans-serif;
-    padding-bottom: 2rem;
-    box-sizing: border-box;
-    overflow-y: auto;
-    pointer-events: auto;
-
-  }
+  position: absolute;
+  margin-top: 30px; 
+  right: 15px;
+  width: 350px;
+  max-height: calc(100% - 150px);
+  background-color: var(--bg2);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 5;
+  font-family: 'Poppins', sans-serif;
+  padding-bottom: 2rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  pointer-events: auto;
+  
+}
   
   .expanded {
     height: calc(100% - 30px);

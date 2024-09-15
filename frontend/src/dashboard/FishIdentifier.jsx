@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { MdImage, MdCamera, MdFileUpload, MdAutorenew, MdAnalytics, MdAddAPhoto, MdClose } from 'react-icons/md';
+import { MdImage, MdCamera, MdFileUpload, MdAutorenew, MdAnalytics, MdAddAPhoto, MdClose, MdZoomIn, MdZoomOut } from 'react-icons/md';
 import { FaFish } from 'react-icons/fa';
 import FishResultsModal from './FishResultsModal';
 import FishUnlockedNotification from './FishUnlockedNotification';
@@ -21,6 +21,11 @@ const FishIdentifier = () => {
   const fileInputRef = useRef(null);
   const streamRef = useRef(null);
   const { user } = useContext(UserContext);
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const imageRef = useRef(null);
+
 
   useEffect(() => {
     if (isCameraModalOpen) {
@@ -76,6 +81,35 @@ const FishIdentifier = () => {
       videoRef.current.srcObject = null;
     }
   };
+
+  const handleZoomIn = () => {
+    setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 3));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5));
+  };
+
+  const handleImageClick = (e) => {
+    if (imageRef.current) {
+      const rect = imageRef.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      
+      imageRef.current.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+    }
+  };
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % attachedImages.length);
+    setZoomLevel(1);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex - 1 + attachedImages.length) % attachedImages.length);
+    setZoomLevel(1);
+  };
+
 
   const captureImage = () => {
     if (videoRef.current && canvasRef.current) {
@@ -248,26 +282,41 @@ const FishIdentifier = () => {
         />
       )}
 
-      {isAttachedImagesModalOpen && (
-        <div className={styles.modal}>
-          <div className={styles.modalContent}>
-            <h2 className={styles.modalTitle}>Attached Images</h2>
-            <div className={styles.attachedImagesGrid}>
-              {attachedImages.map((img, index) => (
-                <img 
-                  key={index} 
-                  src={URL.createObjectURL(img)} 
-                  alt={`Attached image ${index + 1}`} 
-                  className={styles.attachedImage}
-                />
-              ))}
+    {isAttachedImagesModalOpen && (
+      <div className={styles.modal}>
+        <div className={styles.modalContent}>
+          <h2 className={styles.modalTitle}>Attached Images</h2>
+          <div className={styles.imageViewerContainer}>
+            <img 
+              ref={imageRef}
+              src={URL.createObjectURL(attachedImages[currentImageIndex])}
+              alt={`Attached image ${currentImageIndex + 1}`}
+              className={styles.attachedImage}
+              style={{ transform: `scale(${zoomLevel})` }}
+              onClick={handleImageClick}
+            />
+            <div className={styles.imageControls}>
+              <button onClick={prevImage} className={styles.imageNavButton}>Previous</button>
+              <button onClick={handleZoomOut} className={styles.zoomButton}><MdZoomOut /></button>
+              <button onClick={handleZoomIn} className={styles.zoomButton}><MdZoomIn /></button>
+              <button onClick={nextImage} className={styles.imageNavButton}>Next</button>
             </div>
-            <button onClick={() => setIsAttachedImagesModalOpen(false)} className={styles.closeButton}>
-              <MdClose />
-            </button>
+            <p className={styles.imageCounter}>
+              Image {currentImageIndex + 1} of {attachedImages.length}
+            </p>
           </div>
+          <button 
+            onClick={() => {
+              setIsAttachedImagesModalOpen(false);
+              setZoomLevel(1);
+            }} 
+            className={styles.closeButton}
+          >
+            <MdClose />
+          </button>
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 };
