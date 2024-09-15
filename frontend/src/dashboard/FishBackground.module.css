@@ -3,5 +3,6 @@
     height: 100vh;
     background-size: cover;
     background-blend-mode: multiply;
-    z-index: 50000000;
+    z-index: 0;
+
   }

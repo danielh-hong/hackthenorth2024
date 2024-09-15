@@ -25,7 +25,9 @@ const Dashboard = () => {
       <div className={styles.fishBackground}>
         <FishBackground />
       </div>
-      <FishIdentifier />
+      <div className={styles.fishIdentifier}>
+        <FishIdentifier />
+      </div>
     </div>
   );
 };

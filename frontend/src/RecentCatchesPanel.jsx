@@ -7,14 +7,16 @@ const RecentCatchesPanel = ({ onCatchSelect }) => {
   const [recentCatches, setRecentCatches] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(''); // Added searchQuery state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchRecentCatches();
   }, []);
 
   const fetchRecentCatches = async (query = '') => {
-    setLoading(true); // Reset loading state
+    setLoading(true);
+    setError(null);
     try {
       const response = await fetch(`http://localhost:3001/recent-fish-catches?query=${query}`);
       if (!response.ok) throw new Error('Failed to fetch recent catches');
@@ -22,6 +24,7 @@ const RecentCatchesPanel = ({ onCatchSelect }) => {
       setRecentCatches(data);
     } catch (error) {
       console.error('Error fetching recent catches:', error);
+      setError('Failed to fetch recent catches. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -36,29 +39,31 @@ const RecentCatchesPanel = ({ onCatchSelect }) => {
     setIsExpanded(!isExpanded);
   };
 
-return (
-  <div className={`${styles.panel} ${isExpanded ? styles.expanded : styles.minimized}`}>
-    <div className={styles.header} onClick={togglePanel}>
-      <h2>Recent Catches</h2>
-      {isExpanded ? <ChevronUp /> : <ChevronDown />}
-    </div>
+  return (
+    <div className={`${styles.panel} ${isExpanded ? styles.expanded : styles.minimized}`}>
+      <div className={styles.header} onClick={togglePanel}>
+        <h2>Recent Catches</h2>
+        {isExpanded ? <ChevronUp /> : <ChevronDown />}
+      </div>
 
-    {/* Search bar with icon */}
-    <div className={styles.searchContainer}>
-      <Search className={styles.searchIcon} size={20} />
-      <input
-        type="text"
-        placeholder="Search by fish name or rarity..."
-        value={searchQuery}
-        onChange={handleSearch}
-        className={styles.searchInput}
-      />
-    </div>
-
+      <div className={styles.searchContainer}>
+        <Search className={styles.searchIcon} size={20} />
+        <input
+          type="text"
+          placeholder="Search by fish name or rarity..."
+          value={searchQuery}
+          onChange={handleSearch}
+          className={styles.searchInput}
+        />
+      </div>
 
       <div className={styles.content}>
         {loading ? (
           <div className={styles.loader}></div>
+        ) : error ? (
+          <div className={styles.error}>{error}</div>
+        ) : recentCatches.length === 0 ? (
+          <div className={styles.noResults}>No fish catches found.</div>
         ) : (
           <ul className={styles.catchList}>
             {recentCatches.map((fishCatch) => (

@@ -1,0 +1,152 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+  pointer-events: auto;
+}
+
+.modalContent {
+  background-color: var(--card-bg);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 40%;
+  max-height: 70%;
+  overflow-y: auto;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.modalTitle {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+  text-align: center;
+}
+
+.fishImageContainer {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 2rem;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.fishImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.fishJoke {
+  font-style: italic;
+  margin-bottom: 2rem;
+  color: var(--secondary);
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 1rem;
+  background-color: var(--bg2);
+  border-radius: 0.5rem;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--hover);
+}
+
+.statLabel {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.statValue {
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.progressBar {
+  width: 100%;
+  height: 0.5rem;
+  background-color: var(--bg2);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.progress {
+  height: 100%;
+  background-color: var(--accent);
+  transition: width 1s ease-out;
+}
+
+.fishDescription,
+.fishStory {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: var(--bg2);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.fishDescription h3,
+.fishStory h3 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.fishDescription p,
+.fishStory p {
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: var(--highlight);
+  color: var(--card-bg);
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.closeButton:hover {
+  background-color: var(--hover);
+  transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+  .modalContent {
+    max-width: 95%;
+    padding: 1.5rem;
+  }
+
+  .modalTitle {
+    font-size: 2rem;
+  }
+
+  .fishJoke {
+    font-size: 1rem;
+  }
+}
