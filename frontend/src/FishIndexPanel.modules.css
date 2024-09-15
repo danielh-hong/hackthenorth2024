@@ -1,0 +1,220 @@
+.panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 350px;
+    background-color: var(--bg2);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 1000;
+    font-family: 'Poppins', sans-serif;
+    padding-bottom: 2rem;
+    box-sizing: border-box;
+  }
+  
+  .expanded {
+    height: calc(100% - 30px);
+    padding-bottom: 2rem;
+    box-sizing: border-box;
+  }
+  
+  .minimized {
+    height: 70px; /* Adjust this value to match your header height */
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    cursor: pointer;
+    box-sizing: border-box;
+    height: 70px; /* Ensure this matches the minimized height */
+    font-family: 'Poppins', sans-serif;
+  
+  }
+  
+  .header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+  
+  }
+  
+  .content {
+    height: calc(100% - 70px);
+    overflow-y: auto;
+    transition: max-height 0.3s ease-out;
+  }
+  
+  .minimized .content {
+    max-height: 0;
+  }
+  
+  /* Rest of the CSS remains the same */
+  
+  .catchList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .catchItem {
+    padding: 20px;
+    border-bottom: 1px solid var(--hover);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+  }
+  
+  .catchItem:hover {
+    background-color: var(--hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px var(--shadow);
+  }
+  
+  .catchHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .fishIcon {
+    font-size: 2rem;
+    margin-right: 15px;
+  }
+  
+  .catchHeader h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: var(--text);
+  }
+  
+  .catchInfo {
+    padding-left: 35px;
+    box-sizing: border-box;
+  }
+  
+  .catchDate {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin-bottom: 5px;
+  }
+  
+  .rarityBar {
+    height: 6px;
+    background-color: var(--hover);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .rarityFill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--highlight));
+    transition: width 0.3s ease;
+  }
+  
+  .catchDetails {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+  
+  .catchDetails span {
+    display: flex;
+    align-items: center;
+  }
+  
+  .catchDetails svg {
+    margin-right: 5px;
+  }
+  
+  .loader {
+    border: 4px solid var(--hover);
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Smooth scrollbar */
+  .content::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .content::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  
+  .content::-webkit-scrollbar-thumb {
+    background-color: var(--secondary);
+    border-radius: 20px;
+    border: 3px solid var(--bg);
+  }
+  
+  
+  
+  /* Search Container */
+  .searchContainer {
+    position: relative;
+    padding: 10px 20px;
+    background-color: var(--bg2);
+    box-sizing: border-box;
+  }
+  
+  /* Search Icon */
+  .searchIcon {
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+    color: var(--secondary);
+    pointer-events: none; /* Allows clicks to pass through to the input */
+  }
+  
+  /* Search Input */
+  .searchInput {
+    width: 100%;
+    padding: 12px 20px 12px 50px; /* Left padding to make space for the icon */
+    border: 2px solid var(--hover);
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: var(--bg);
+    color: var(--text);
+    box-sizing: border-box;
+  }
+  
+  .searchInput::placeholder {
+    color: var(--secondary);
+    opacity: 1; /* Override browser defaults */
+  }
+  
+  
+  
+  /* Animations */
+  @keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
+  
+  .panel {
+    animation: slideIn 0.3s ease-out;
+  }
