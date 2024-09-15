@@ -22,7 +22,7 @@ const Navbar = () => {
         <div className={styles.navLeft}>
           <Link to="/" className={styles.brandLink}>
             <img src="/logo.png" alt="Logo" className={styles.logo}/>
-            <span className={styles.brandText}>FishyDash</span>
+            <span className={styles.brandText}>LureLore</span>
           </Link>
           <div className={`${styles.navLinks} ${isMenuOpen ? styles.active : ''}`}>
             <Link to="/dashboard" className={styles.navLink}>
