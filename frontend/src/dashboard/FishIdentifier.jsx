@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { MdCamera, MdFileUpload, MdAutorenew, MdAnalytics, MdAddAPhoto, MdClose } from 'react-icons/md';
+import { MdImage, MdCamera, MdFileUpload, MdAutorenew, MdAnalytics, MdAddAPhoto, MdClose } from 'react-icons/md';
 import { FaFish } from 'react-icons/fa';
-
+import FishResultsModal from './FishResultsModal';
 import { UserContext } from '../UserContext';
 import styles from './FishIdentifier.module.css';
 
 const FishIdentifier = () => {
   const [image, setImage] = useState(null);
+  const [attachedImages, setAttachedImages] = useState([]);
   const [fishInfo, setFishInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
   const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
+  const [isAttachedImagesModalOpen, setIsAttachedImagesModalOpen] = useState(false);
   const [location, setLocation] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -79,6 +81,7 @@ const FishIdentifier = () => {
       context.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
       canvasRef.current.toBlob((blob) => {
         setImage(blob);
+        setAttachedImages(prev => [...prev, blob]);
         setIsCameraModalOpen(false);
       }, 'image/jpeg');
     }
@@ -88,8 +91,10 @@ const FishIdentifier = () => {
     const file = event.target.files[0];
     if (file) {
       setImage(file);
+      setAttachedImages(prev => [...prev, file]);
     }
   };
+
 
   const analyzeFish = async () => {
     if (!image || !user || !location) {
@@ -130,11 +135,13 @@ const FishIdentifier = () => {
     }
   };
 
+
   const resetCapture = () => {
     setImage(null);
     setFishInfo(null);
     setIsResultsModalOpen(false);
   };
+
 
   const generateFishJoke = (fishName) => {
     const jokes = [
@@ -153,26 +160,9 @@ const FishIdentifier = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <FaFish className={styles.headerIcon} />
-        <h1 className={styles.title}>AquaScan</h1>
-      </div>
-      <p className={styles.description}>
-        Dive into the world of fish identification! Capture or upload an image, and let our AI be your underwater guide.
-        Discover species, rarity, and fun facts about your aquatic finds!
-      </p>
+
       
       <div className={styles.captureContainer}>
-        <div className={styles.imagePreviewArea}>
-          {image ? (
-            <img src={URL.createObjectURL(image)} alt="Captured fish" className={styles.capturedImage} />
-          ) : (
-            <div className={styles.placeholderContent}>
-              <MdAddAPhoto className={styles.placeholderIcon} />
-              <p>Your aquatic discovery awaits!</p>
-            </div>
-          )}
-        </div>
 
         <div className={styles.actionButtons}>
           <button onClick={() => setIsCameraModalOpen(true)} className={`${styles.actionButton} ${styles.cameraButton}`}>
@@ -198,8 +188,18 @@ const FishIdentifier = () => {
               </button>
             </>
           )}
+
+          {attachedImages.length > 0 && (
+            <button 
+              onClick={() => setIsAttachedImagesModalOpen(true)} 
+              className={styles.viewAttachedButton}
+            >
+              <MdImage /> View Attached Images ({attachedImages.length})
+            </button>
+          )}
         </div>
       </div>
+
 
       {isCameraModalOpen && (
         <div className={styles.modal}>
@@ -220,50 +220,34 @@ const FishIdentifier = () => {
       <canvas ref={canvasRef} style={{ display: 'none' }} width="640" height="480" />
 
       {isResultsModalOpen && fishInfo && (
-        <div className={styles.fishResultsModal}>
-          <div className={styles.fishResultsContent}>
-            <h2 className={styles.fishResultsTitle}>You've discovered a {fishInfo.fishName}!</h2>
-            <div className={styles.fishImageContainer}>
-              <img src={URL.createObjectURL(image)} alt={fishInfo.fishName} className={styles.fishImage} />
+        <FishResultsModal
+          fishInfo={fishInfo}
+          image={image}
+          onClose={() => setIsResultsModalOpen(false)}
+        />
+      )}
+
+      {isAttachedImagesModalOpen && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2 className={styles.modalTitle}>Attached Images</h2>
+            <div className={styles.attachedImagesGrid}>
+              {attachedImages.map((img, index) => (
+                <img 
+                  key={index} 
+                  src={URL.createObjectURL(img)} 
+                  alt={`Attached image ${index + 1}`} 
+                  className={styles.attachedImage}
+                />
+              ))}
             </div>
-            <p className={styles.fishJoke}>{fishInfo.joke}</p>
-            <div className={styles.statRow}>
-              <span className={styles.statLabel}>Rarity:</span>
-              <span className={styles.statValue}>{fishInfo.rarityScore}/10</span>
-            </div>
-            <div className={styles.progressBar}>
-              <div className={styles.progress} style={{width: `${fishInfo.rarityScore * 10}%`}}></div>
-            </div>
-            <div className={styles.statRow}>
-              <span className={styles.statLabel}>Weight:</span>
-              <span className={styles.statValue}>{fishInfo.weight} grams</span>
-            </div>
-            <div className={styles.statRow}>
-              <span className={styles.statLabel}>Length:</span>
-              <span className={styles.statValue}>{fishInfo.length} cm</span>
-            </div>
-            <div className={styles.statRow}>
-              <span className={styles.statLabel}>Date Caught:</span>
-              <span className={styles.statValue}>{fishInfo.dateCaught}</span>
-            </div>
-            <div className={styles.statRow}>
-              <span className={styles.statLabel}>Location:</span>
-              <span className={styles.statValue}>{fishInfo.location}</span>
-            </div>
-            <div className={styles.fishDescription}>
-              <h3>Description</h3>
-              <p>{fishInfo.description}</p>
-            </div>
-            <div className={styles.fishStory}>
-              <h3>Fish Story</h3>
-              <p>{fishInfo.fishStory}</p>
-            </div>
-            <button onClick={() => setIsResultsModalOpen(false)} className={styles.closeButton}>
+            <button onClick={() => setIsAttachedImagesModalOpen(false)} className={styles.closeButton}>
               <MdClose />
             </button>
           </div>
         </div>
       )}
+
     </div>
   );
 };

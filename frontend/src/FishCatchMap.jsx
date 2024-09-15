@@ -19,6 +19,7 @@ const getColorByFishName = (fishName) => {
 };
 
 const createFishIcon = (color) => {
+  console.log('Creating fish icon with color:', color); // Add this
   return L.divIcon({
     className: styles.fishIcon,
     html: `
@@ -69,11 +70,12 @@ const FishCatchMap = () => {
         throw new Error('Failed to fetch fish catches');
       }
       const data = await response.json();
+      console.log('Fetched fish catches:', data); // Add this log
       setFishCatches(data);
+      
       // Set map center to the first catch location if available
       if (data.length > 0) {
-        const [lat, lng] = data[0].location.split(',').map(Number);
-        setMapCenter([lat, lng]);
+        setMapCenter([data[0].latitude, data[0].longitude]);
       }
     } catch (error) {
       console.error('Error fetching fish catches:', error);
@@ -81,17 +83,15 @@ const FishCatchMap = () => {
       setLoading(false);
     }
   };
-
+    
   const handleZoomToCatch = (fishCatch) => {
-    const [lat, lng] = fishCatch.location.split(',').map(Number);
-    setMapCenter([lat, lng]);
+    setMapCenter([fishCatch.latitude, fishCatch.longitude]);
     setMapZoom(15);
     setSelectedCatch(fishCatch);
   };
 
   const handleCatchSelect = (selectedCatch) => {
-    const [lat, lng] = [selectedCatch.latitude, selectedCatch.longitude];
-    setMapCenter([lat, lng]);
+    setMapCenter([selectedCatch.latitude, selectedCatch.longitude]);
     setMapZoom(15);
     setSelectedCatch(selectedCatch);
   };
@@ -109,8 +109,17 @@ const FishCatchMap = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
         {fishCatches.map((fishCatch, index) => {
-          const [lat, lng] = [fishCatch.latitude, fishCatch.longitude];
-          const color = getColorByFishName(fishCatch.fishName);
+          const lat = fishCatch.latitude;
+          const lng = fishCatch.longitude;
+
+          // Check if latitude and longitude are valid numbers
+          if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+            console.error(`Invalid lat/lng for catch ${index}:`, lat, lng);
+            return null; // Skip invalid points
+          }
+
+          const fishName = fishCatch.fishName || 'Unknown Fish';
+          const color = getColorByFishName(fishName);
           const icon = createFishIcon(color);
 
           return (
