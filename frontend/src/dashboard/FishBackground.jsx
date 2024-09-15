@@ -1,12 +1,20 @@
+// main fish component
+
+
 import React, { useEffect, useRef, useState, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-// import "./App.css";
 import { OrbitControls } from "@react-three/drei";
 import { ClownFishModel } from "../components/ClownFishComponent";
 import { TroutFishModel } from "../components/TroutFishComponent";
 import { DoubleSide } from "three";
 import styles from './FishBackground.module.css';
+import FishModal from "./FishModal";
 import Corals from "../components/Corals";
+import ClickableFish from "./ClickableFish";
+
+
+
+
 
 function Box(props) {
   let boxRef = useRef();
@@ -53,7 +61,35 @@ function Plane(props) {
   );
 }
 
+
+
 function FishBackground() {
+  const [fishCatches, setFishCatches] = useState([]);
+  const [selectedFish, setSelectedFish] = useState(null);
+
+
+  useEffect(() => {
+    const fetchFishCatches = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/get-all-fish-catches');
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch fish catches');
+        }
+        const data = await response.json();
+        setFishCatches(data);
+      } catch (error) {
+        console.error('Error fetching fish catches:', error);
+      }
+    };
+
+    fetchFishCatches();
+  }, []);
+
+  const handleFishClick = (fish) => {
+    setSelectedFish(fish);
+  };
+
   return (
     <div className={styles.main}>
       <Canvas camera={{ position: [0, 17, 55], fov: 75 }}>
@@ -65,6 +101,7 @@ function FishBackground() {
           maxPolarAngle={(4 * 3.141) / 5}
           minPolarAngle={3.141 / 5}
         />
+
         <>
           <pointLight
             position={[30 / 2, 20 / 2, 20 / 2]}
@@ -96,16 +133,16 @@ function FishBackground() {
 
         <ambientLight color={[1.9, 1, 1]} intensity={1} />
 
-        <Suspense>
-          {new Array(20).fill(0).map((el, ind) => {
-            return <ClownFishModel scale={0.1} index={ind / 20} key={ind} />;
-          })}
-          {new Array(5).fill(0).map((_, ind) => (
-            <TroutFishModel key={ind} scale={0.1} index={ind / 10} />
+        <Suspense fallback={null}>
+          {fishCatches.map((fish, index) => (
+            <ClickableFish
+              key={fish._id}
+              fish={fish}
+              index={index}
+              onClick={handleFishClick}
+              ModelComponent={index % 2 === 0 ? ClownFishModel : TroutFishModel}
+            />
           ))}
-        </Suspense>
-
-        <Suspense>
           <Corals dimensions={[30, 19.8, 20]} num={100} />
         </Suspense>
 
@@ -131,6 +168,9 @@ function FishBackground() {
           recieveShadow
         />
       </Canvas>
+      {selectedFish && (
+        <FishModal fish={selectedFish} onClose={() => setSelectedFish(null)} />
+      )}
     </div>
   );
 }

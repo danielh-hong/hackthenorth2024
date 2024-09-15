@@ -1,0 +1,81 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.fishName {
+  font-size: 2rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
+}
+
+.fishInfo {
+  margin-bottom: 1rem;
+}
+
+.fishInfo p {
+  margin: 0.5rem 0;
+  color: #34495e;
+}
+
+.rarityScore {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.fishDescription, .fishStory {
+  margin-top: 1rem;
+}
+
+.fishDescription h3, .fishStory h3 {
+  color: #2980b9;
+  margin-bottom: 0.5rem;
+}
+
+.fishDescription p, .fishStory p {
+  color: #34495e;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .modalContent {
+    padding: 1rem;
+  }
+
+  .fishName {
+    font-size: 1.5rem;
+  }
+}

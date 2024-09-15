@@ -269,6 +269,20 @@ app.get('/recent-fish-catches', async (req, res) => {
 });
 
 
+app.get('/fish-details/:id', async (req, res) => {
+  try {
+    const fishCatch = await FishCatch.findById(req.params.id).populate('caughtBy', 'username');
+    if (!fishCatch) {
+      return res.status(404).json({ error: 'Fish catch not found' });
+    }
+    res.json(fishCatch);
+  } catch (error) {
+    console.error('Error fetching fish details:', error);
+    res.status(500).json({ error: 'An error occurred while fetching fish details' });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
