@@ -1,5 +1,5 @@
 # LureLore (2024 HTN Finalist)
-
+### Link to Finalist presentation (1:20:00): https://www.youtube.com/live/I5dP9mbnx4M
 ## Description
 
 LureLore is an innovative application designed to enhance the fishing experience by turning each catch into a rich, interactive memory. Using AI technology, it transforms simple fish photos into comprehensive records complete with species identification, rarity ratings, and AI-generated stories.
