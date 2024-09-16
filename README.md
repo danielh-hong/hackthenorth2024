@@ -1,4 +1,4 @@
-# LureLore
+# LureLore (2024 HTN Finalist)
 
 ## Description
 
