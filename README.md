@@ -1,10 +1,19 @@
 # LureLore (2024 HTN Finalist)
 ### Link to Finalist presentation (1:20:00): https://www.youtube.com/live/I5dP9mbnx4M
+
+## TLDR:
+Caught a fish? Take a snap. Our AI-powered app identifies the catch, keeps track of stats, and puts that fish in your 3d, virtual aquarium which you can interact with. It's a wholesome way for fishing enthusiasts to reminisnce upon the 'good old days' years into the future. Also, click on any fish in the aquarium, and see all those fishes stats, including date caught, location caught, and a funny joke making ever the more memorable.
+
+Depending on the fish caught, also reel in achievements. Keep track of your first fish caught, your first tropical fish caught, or your first 20+ pound fish! The cherry on top? See on the map where other fish are caught around the world, so that the one fish you've always wanted might just be your next catch.
+
+But remember, Lure lore isn't just about catching fish -- its's about catching lifelong memories.
+
+
 ## Description
 
-LureLore is an innovative application designed to enhance the fishing experience by turning each catch into a rich, interactive memory. Using AI technology, it transforms simple fish photos into comprehensive records complete with species identification, rarity ratings, and AI-generated stories.
+LureLore is an app made to enhance the fishing experience by turning each catch into a rich, interactive memory. Using AI technology, it transforms simple fish photos into comprehensive records complete with species identification, rarity ratings, and AI-generated stories.
 
-## Problem Statement
+## What's the opportunity?
 
 Many fishing enthusiasts struggle to keep track of their catches in a meaningful way, often relying on basic photos that fail to capture the full experience. LureLore solves this by transforming each catch into a rich, interactive memory complete with AI-generated stories, rarity ratings, and a virtual aquarium, turning fleeting moments into lasting, shareable experiences.
 
@@ -70,11 +79,11 @@ Many fishing enthusiasts struggle to keep track of their catches in a meaningful
 
 ## Future Features
 
-In the future, we aim to develop and train a custom machine learning model using technologies like TensorFlow or PyTorch, which will enable more accurate fish species identification, personalized catch predictions based on user history, and even more engaging, context-aware story generation.
+In the future, we aim to add more 3d fish into the library, which was our main limitation; after all, there's no way to automatically create a 3d fish model for every existing fish. We also aim to improve the 3d scene. So far, we've already curated a scene (which we like to think looks pretty good) of 3d bubbles, simulated realistic fish movement, a nice underwater background, corals, and underwater lighting. But obviously, there's always improvement to be made :)
 
 ## Contributing
 
-We welcome contributions to [Project Name]! If you have suggestions for improvements or bug fixes, please follow these steps:
+We welcome contributions to LureLore! If you have suggestions for improvements or bug fixes, please follow these steps:
 
 1. Fork the repository
 2. Create a new branch for your feature (`git checkout -b feature/AmazingFeature`)
@@ -83,11 +92,10 @@ We welcome contributions to [Project Name]! If you have suggestions for improvem
 5. Open a Pull Request
 
 ## Contributors
-
-- Aaron Loh
 - Daniel Hong
-- Avery Chan
 - David Zhuang
+- Aaron Loh
+- Avery Chan
 
 ---
 
