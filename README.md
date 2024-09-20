@@ -1,4 +1,4 @@
-# LureLore (2024 HTN Finalist)
+# LureLore (2024 HTN Finalist) - $5000+
 ### Link to Finalist presentation (1:20:00): https://www.youtube.com/live/I5dP9mbnx4M
 
 ## TLDR:
