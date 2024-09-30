@@ -1,5 +1,5 @@
 # LureLore (2024 HTN Finalist) - $5000+
-### Link to Finalist presentation (1:20:00): https://www.youtube.com/live/I5dP9mbnx4M
+### Link to Finalist presentation (1:20:00): [https://www.youtube.com/live/I5dP9mbnx4M](https://www.youtube.com/live/I5dP9mbnx4M?si=0jEV4LCMkgnP2BJ5&t=4792)
 
 ## TLDR:
 Caught a fish? Take a snap. Our AI-powered app identifies the catch, keeps track of stats, and puts that fish in your 3d, virtual aquarium which you can interact with. It's a wholesome way for fishing enthusiasts to reminisnce upon the 'good old days' years into the future. Also, click on any fish in the aquarium, and see all those fishes stats, including date caught, location caught, and a funny joke making ever the more memorable.
