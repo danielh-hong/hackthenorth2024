@@ -1,11 +1,32 @@
 import React from 'react';
 import { MdClose } from 'react-icons/md';
+import { MdShare } from 'react-icons/md';
 import styles from './FishResultsModal.module.css';
 
 const FishResultsModal = ({ fishInfo, image, onClose }) => {
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/shared-fish/${fishInfo._id}`;
+    const shareText = `I caught a ${fishInfo.fishName} with a rarity of ${fishInfo.rarityScore}/10!`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Lure Lore Catch',
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      navigator.clipboard.writeText(`${shareText} Check it out: ${shareUrl}`);
+      alert('Link copied to clipboard!');
     }
   };
 
@@ -20,6 +41,9 @@ const FishResultsModal = ({ fishInfo, image, onClose }) => {
         </div>
         <h2 className={styles.fishName}>{fishInfo.fishName}</h2>
         <p className={styles.fishJoke}>{fishInfo.joke}</p>
+        <button onClick={handleShare} className={styles.shareButton}>
+          <MdShare /> Share This Catch
+        </button>
 
         <div className={styles.progressContainer}>
           <div className={styles.statRow}>

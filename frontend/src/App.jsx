@@ -7,6 +7,7 @@ import Signup from './auth/signup';
 import { ThemeProvider } from './ColorTheme';
 import { UserProvider, UserContext } from './UserContext';
 import FishAchievements from './Achievements';
+import SharedFishCatch from './dashboard/SharedFishCatch';
 
 import FishCatchMap from './FishCatchMap';
 
@@ -30,6 +31,7 @@ const AppRoutes = () => {
         <Route path="/achievements" element={<PrivateRoute><FishAchievements /></PrivateRoute>} />
         <Route path="/map" element={<PrivateRoute><FishCatchMap /></PrivateRoute>} />
         <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} replace />} />
+        <Route path="/shared-fish/:id" element= {<SharedFishCatch />} /> 
       </Routes>
     </>
   );
